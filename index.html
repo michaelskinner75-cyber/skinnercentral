@@ -4,382 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07090f">
-  <title>DJ Skinner | Skinner Central</title>
+  <title>DJ Skinner Music TV | Skinner Central</title>
   <style>
-    :root {
-      --bg: #07090f;
-      --panel: rgba(18, 22, 35, .86);
-      --panel-2: rgba(28, 34, 52, .82);
-      --text: #f7f8ff;
-      --muted: #a6acc3;
-      --accent: #7c5cff;
-      --accent-2: #1fd1f9;
-      --good: #55e6a5;
-      --danger: #ff5577;
-      --border: rgba(255,255,255,.1);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 24px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behaviour: smooth; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 12%, rgba(124,92,255,.30), transparent 28%),
-        radial-gradient(circle at 88% 20%, rgba(31,209,249,.20), transparent 26%),
-        linear-gradient(160deg, #05060a 0%, #0a0d17 50%, #05060b 100%);
-      background-attachment: fixed;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: linear-gradient(to bottom, black, transparent 70%);
-    }
-    button, input, textarea, select { font: inherit; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    .shell { width: min(1180px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 96px; }
-    .topbar {
-      position: sticky;
-      top: 10px;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: rgba(8,10,17,.78);
-      backdrop-filter: blur(20px);
-      box-shadow: var(--shadow);
-    }
-    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .logo {
-      width: 46px; height: 46px; border-radius: 15px;
-      display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 10px 30px rgba(124,92,255,.36);
-      font-size: 1.35rem;
-    }
-    .brand h1 { margin: 0; font-size: 1rem; letter-spacing: .02em; }
-    .brand span { display: block; color: var(--muted); font-size: .78rem; margin-top: 2px; }
-    .clock { text-align: right; white-space: nowrap; }
-    .clock strong { display: block; font-size: 1.05rem; }
-    .clock span { color: var(--muted); font-size: .75rem; }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap: 18px;
-      margin-top: 24px;
-    }
-    .hero-main, .hero-side, .card {
-      border: 1px solid var(--border);
-      background: linear-gradient(155deg, rgba(28,33,50,.90), rgba(12,15,25,.86));
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-    }
-    .hero-main { border-radius: 30px; padding: clamp(24px, 5vw, 54px); position: relative; overflow: hidden; }
-    .hero-main::after {
-      content: "";
-      position: absolute;
-      width: 260px; height: 260px; border-radius: 50%;
-      right: -70px; bottom: -100px;
-      background: radial-gradient(circle, rgba(31,209,249,.45), transparent 68%);
-    }
-    .eyebrow { color: var(--accent-2); text-transform: uppercase; font-size: .76rem; font-weight: 800; letter-spacing: .18em; }
-    .hero h2 { font-size: clamp(2.3rem, 7vw, 5.1rem); line-height: .92; margin: 12px 0 18px; letter-spacing: -.055em; }
-    .hero h2 span { display: block; background: linear-gradient(90deg, #fff, #a99aff 45%, #55dcff); -webkit-background-clip: text; color: transparent; }
-    .hero p { color: var(--muted); max-width: 620px; line-height: 1.65; margin: 0; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-    .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 12px 17px;
-      color: white;
-      background: linear-gradient(135deg, var(--accent), #5d42e8);
-      font-weight: 750;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform .18s ease, filter .18s ease;
-    }
-    .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
-    .btn.secondary { background: rgba(255,255,255,.07); border: 1px solid var(--border); }
-    .hero-side { border-radius: 30px; padding: 22px; display: grid; align-content: space-between; min-height: 300px; }
-    .now-label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; }
-    .deck-art {
-      aspect-ratio: 1;
-      max-height: 210px;
-      border-radius: 24px;
-      margin: 18px 0;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at center, #111 0 14%, #2a2a32 15% 18%, #111 19% 22%, #2c2c35 23% 26%, #111 27% 31%, #24242c 32% 55%, transparent 56%),
-        linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: inset 0 0 50px rgba(0,0,0,.35), 0 18px 30px rgba(0,0,0,.25);
-    }
-    .deck-art span { width: 42px; height: 42px; border-radius: 50%; background: #d6d1ff; box-shadow: 0 0 0 10px rgba(255,255,255,.08); }
-    .status-row { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .85rem; }
-
-    .section-title { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin: 32px 2px 14px; }
-    .section-title h3 { margin: 0; font-size: 1.3rem; }
-    .section-title span { color: var(--muted); font-size: .82rem; }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .card { border-radius: var(--radius); padding: 20px; grid-column: span 4; min-width: 0; }
-    .card.wide { grid-column: span 8; }
-    .card.full { grid-column: 1 / -1; }
-    .card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .card-head h4 { margin: 0; font-size: 1rem; }
-    .icon { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: rgba(124,92,255,.16); }
-    .quick-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .quick-links a {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--text);
-      background: rgba(255,255,255,.04);
-      text-decoration: none;
-      transition: background .18s ease, transform .18s ease;
-    }
-    .quick-links a:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
-    .quick-links b { font-size: .87rem; }
-    .quick-links small { display: block; color: var(--muted); font-size: .68rem; margin-top: 2px; }
-
-    .bpm-display { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 900; letter-spacing: -.06em; line-height: 1; }
-    .bpm-display span { font-size: .8rem; letter-spacing: .1em; color: var(--muted); margin-left: 8px; }
-    .tap-button {
-      width: 100%; min-height: 76px; margin-top: 18px;
-      border: 1px solid rgba(124,92,255,.45);
-      border-radius: 18px;
-      color: white;
-      background: linear-gradient(135deg, rgba(124,92,255,.35), rgba(31,209,249,.15));
-      font-weight: 850;
-      cursor: pointer;
-      user-select: none;
-    }
-    .tap-button:active { transform: scale(.985); }
-    .mini-row { display: flex; gap: 8px; margin-top: 10px; }
-    .mini-btn { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,.05); cursor: pointer; }
-
-    textarea, input, select {
-      width: 100%;
-      color: var(--text);
-      background: rgba(5,7,12,.65);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 12px 13px;
-      outline: none;
-    }
-    textarea:focus, input:focus, select:focus { border-color: rgba(124,92,255,.72); box-shadow: 0 0 0 3px rgba(124,92,255,.12); }
-    textarea { min-height: 170px; resize: vertical; line-height: 1.5; }
-    .save-note { color: var(--good); font-size: .75rem; margin-top: 9px; min-height: 1em; }
-
-    .set-form { display: grid; grid-template-columns: 1.4fr .65fr .65fr auto; gap: 9px; }
-    .track-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
-    .track-item {
-      display: grid;
-      grid-template-columns: 34px minmax(0,1fr) auto auto;
-      align-items: center;
-      gap: 10px;
-      padding: 11px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(255,255,255,.035);
-    }
-    .track-number { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: rgba(124,92,255,.16); font-weight: 800; color: #cfc7ff; }
-    .track-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .track-meta { color: var(--muted); font-size: .78rem; white-space: nowrap; }
-    .remove { border: 0; background: transparent; color: var(--danger); cursor: pointer; font-size: 1.1rem; }
-    .empty { color: var(--muted); text-align: center; padding: 22px 8px; border: 1px dashed var(--border); border-radius: 14px; }
-
-    .footer { text-align: center; color: var(--muted); font-size: .78rem; margin-top: 28px; }
-    .footer b { color: var(--text); }
-
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-side { grid-template-columns: 180px 1fr; gap: 20px; min-height: 0; align-items: center; }
-      .deck-art { margin: 0; }
-      .card, .card.wide { grid-column: span 6; }
-      .card.full { grid-column: 1 / -1; }
-    }
-    @media (max-width: 640px) {
-      .shell { width: min(100% - 18px, 1180px); padding-top: 9px; }
-      .topbar { top: 6px; border-radius: 17px; }
-      .brand span { display: none; }
-      .hero { margin-top: 14px; }
-      .hero-main, .hero-side { border-radius: 24px; }
-      .hero-side { grid-template-columns: 1fr; }
-      .deck-art { max-width: 220px; width: 100%; margin: 0 auto; }
-      .card, .card.wide, .card.full { grid-column: 1 / -1; }
-      .set-form { grid-template-columns: 1fr 1fr; }
-      .set-form input:first-child { grid-column: 1 / -1; }
-      .set-form .btn { grid-column: 1 / -1; }
-      .track-item { grid-template-columns: 34px minmax(0,1fr) auto; }
-      .track-meta:nth-of-type(2) { display: none; }
-      .quick-links { grid-template-columns: 1fr 1fr; }
-    }
+    :root{--bg:#07090f;--panel:rgba(18,22,35,.88);--text:#f7f8ff;--muted:#a6acc3;--accent:#7c5cff;--accent2:#1fd1f9;--border:rgba(255,255,255,.11);--danger:#ff5577;--radius:22px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 10% 5%,rgba(124,92,255,.28),transparent 27%),radial-gradient(circle at 90% 15%,rgba(31,209,249,.18),transparent 25%),linear-gradient(155deg,#05060a,#0a0d17 50%,#05060b);background-attachment:fixed}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px}
+    button,input{font:inherit}.shell{width:min(1400px,calc(100% - 28px));margin:auto;padding:16px 0 70px}.topbar{position:sticky;top:8px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border:1px solid var(--border);border-radius:19px;background:rgba(8,10,17,.84);backdrop-filter:blur(20px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+    .brand{display:flex;align-items:center;gap:11px}.logo{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;background:linear-gradient(135deg,var(--accent),var(--accent2))}.brand h1{margin:0;font-size:1rem}.brand small{display:block;color:var(--muted);margin-top:2px}.clock{text-align:right}.clock strong{display:block}.clock span{color:var(--muted);font-size:.75rem}
+    .hero{margin:22px 0 18px;padding:clamp(24px,5vw,52px);border:1px solid var(--border);border-radius:30px;background:linear-gradient(145deg,rgba(31,37,58,.9),rgba(10,13,22,.9));box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-100px;bottom:-130px;background:radial-gradient(circle,rgba(31,209,249,.38),transparent 68%)}.eyebrow{color:var(--accent2);font-size:.75rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h2{font-size:clamp(2.35rem,7vw,5.5rem);line-height:.92;letter-spacing:-.055em;margin:12px 0 16px}.hero h2 span{display:block;background:linear-gradient(90deg,#fff,#a99aff 50%,#55dcff);-webkit-background-clip:text;color:transparent}.hero p{position:relative;z-index:1;color:var(--muted);line-height:1.6;max-width:700px;margin:0}.hero-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{border:0;border-radius:13px;padding:12px 16px;color:white;background:linear-gradient(135deg,var(--accent),#5d42e8);font-weight:800;text-decoration:none;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.07);border:1px solid var(--border)}
+    .toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:18px 0}.toolbar input{width:100%;min-width:0;color:white;background:rgba(5,7,12,.72);border:1px solid var(--border);border-radius:14px;padding:13px 14px;outline:none}.toolbar input:focus{border-color:rgba(124,92,255,.8);box-shadow:0 0 0 3px rgba(124,92,255,.13)}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 2px 13px}.section-head h3{margin:0}.section-head span{color:var(--muted);font-size:.8rem}.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.video-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel);box-shadow:0 14px 35px rgba(0,0,0,.28)}.video-wrap{position:relative;aspect-ratio:16/9;background:#000}.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.video-info{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px}.video-info strong{font-size:.9rem}.video-info span{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}.remove{border:0;background:transparent;color:var(--danger);font-size:1.25rem;cursor:pointer}.starter .remove{display:none}
+    .genres{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.genre{display:block;padding:17px 12px;text-align:center;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.045);color:white;text-decoration:none;font-weight:750}.genre:hover{background:rgba(255,255,255,.09)}.empty{grid-column:1/-1;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:18px;padding:28px}.footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:28px}.footer b{color:white}
+    @media(max-width:1050px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.genres{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:650px){.shell{width:calc(100% - 18px);padding-top:9px}.brand small{display:none}.hero{margin-top:13px;border-radius:23px}.video-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.genres{grid-template-columns:repeat(2,1fr)}.section-head{align-items:start;flex-direction:column}.clock span{display:none}}
   </style>
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">🎧</div>
-        <div>
-          <h1>Skinner Central</h1>
-          <span>Personal dashboard</span>
-        </div>
-      </div>
-      <div class="clock">
-        <strong id="clock">--:--</strong>
-        <span id="date">Loading date…</span>
-      </div>
-    </header>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="logo">📺</div><div><h1>DJ Skinner Music TV</h1><small>Skinner Central</small></div></div>
+    <div class="clock"><strong id="clock">--:--</strong><span id="date">Loading…</span></div>
+  </header>
 
-    <section class="hero">
-      <div class="hero-main">
-        <div class="eyebrow">Skinner Central • DJ Hub</div>
-        <h2>DJ <span>Skinner</span></h2>
-        <p>Your own performance dashboard for planning sets, checking BPM, keeping mix notes and jumping straight into the tools you use most.</p>
-        <div class="hero-actions">
-          <a class="btn" href="#set-planner">Build a set</a>
-          <a class="btn secondary" href="https://open.spotify.com" target="_blank" rel="noopener">Open Spotify</a>
-        </div>
-      </div>
-      <aside class="hero-side">
-        <div>
-          <div class="now-label">Deck status</div>
-          <div class="deck-art" aria-label="Stylised record deck"><span></span></div>
-        </div>
-        <div>
-          <div class="status-row"><span>Controller</span><strong>DDJ-FLX4</strong></div>
-          <div class="status-row"><span>Mode</span><strong>Ready</strong></div>
-        </div>
-      </aside>
-    </section>
+  <section class="hero">
+    <div class="eyebrow">DJ Skinner • Music Video Hub</div>
+    <h2>Music <span>Video Wall</span></h2>
+    <p>Watch dance classics, club anthems and happy-hardcore favourites in one place. Add any YouTube music video by pasting its link below.</p>
+    <div class="hero-actions"><a class="btn" href="#videos">Watch videos</a><a class="btn secondary" href="https://www.youtube.com/results?search_query=dance+music+videos" target="_blank" rel="noopener">Find more on YouTube</a></div>
+  </section>
 
-    <div class="section-title"><h3>DJ workspace</h3><span>Saved automatically on this device</span></div>
-    <section class="grid">
-      <article class="card">
-        <div class="card-head"><h4>Quick launch</h4><div class="icon">↗</div></div>
-        <div class="quick-links">
-          <a href="https://open.spotify.com" target="_blank" rel="noopener"><span>🟢</span><div><b>Spotify</b><small>Music library</small></div></a>
-          <a href="https://rekordbox.com" target="_blank" rel="noopener"><span>🎛️</span><div><b>Rekordbox</b><small>DJ software</small></div></a>
-          <a href="https://www.youtube.com" target="_blank" rel="noopener"><span>🔴</span><div><b>YouTube</b><small>Find tracks</small></div></a>
-          <a href="https://soundcloud.com" target="_blank" rel="noopener"><span>☁️</span><div><b>SoundCloud</b><small>Discover mixes</small></div></a>
-        </div>
-      </article>
+  <div class="toolbar">
+    <input id="videoUrl" type="url" placeholder="Paste a YouTube video link here…" aria-label="YouTube video link">
+    <button class="btn" id="addVideo">Add video</button>
+    <button class="btn secondary" id="clearAdded">Clear added</button>
+  </div>
 
-      <article class="card">
-        <div class="card-head"><h4>Tap BPM</h4><div class="icon">♩</div></div>
-        <div class="bpm-display" id="bpmValue">---<span>BPM</span></div>
-        <button class="tap-button" id="tapButton">TAP TO THE BEAT</button>
-        <div class="mini-row"><button class="mini-btn" id="halfBpm">½ BPM</button><button class="mini-btn" id="doubleBpm">×2 BPM</button><button class="mini-btn" id="resetBpm">Reset</button></div>
-      </article>
+  <div class="section-head" id="videos"><h3>Featured music videos</h3><span>Tap play on any video</span></div>
+  <section class="video-grid" id="videoGrid"></section>
 
-      <article class="card">
-        <div class="card-head"><h4>Mix notes</h4><div class="icon">✎</div></div>
-        <textarea id="mixNotes" placeholder="Write down transition ideas, cue points, tracks to download, or reminders for your next set…"></textarea>
-        <div class="save-note" id="saveStatus"></div>
-      </article>
+  <div class="section-head"><h3>Explore more music</h3><span>Opens YouTube results</span></div>
+  <section class="genres">
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=90s+dance+music+videos">💿 90s Dance</a>
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=2000s+club+anthems+music+videos">🔥 Club Anthems</a>
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=happy+hardcore+music+videos">⚡ Happy Hardcore</a>
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=GBX+anthems">🏴 GBX</a>
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=trance+classics+music+videos">🌌 Trance</a>
+    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=modern+EDM+music+videos">🎛️ EDM</a>
+  </section>
 
-      <article class="card full" id="set-planner">
-        <div class="card-head"><h4>Set planner</h4><div class="icon">♫</div></div>
-        <form class="set-form" id="trackForm">
-          <input id="trackName" type="text" placeholder="Track or mix name" required maxlength="80">
-          <input id="trackBpm" type="number" placeholder="BPM" min="40" max="240">
-          <select id="trackKey" aria-label="Musical key">
-            <option value="">Key</option><option>1A</option><option>1B</option><option>2A</option><option>2B</option><option>3A</option><option>3B</option><option>4A</option><option>4B</option><option>5A</option><option>5B</option><option>6A</option><option>6B</option><option>7A</option><option>7B</option><option>8A</option><option>8B</option><option>9A</option><option>9B</option><option>10A</option><option>10B</option><option>11A</option><option>11B</option><option>12A</option><option>12B</option>
-          </select>
-          <button class="btn" type="submit">Add track</button>
-        </form>
-        <ul class="track-list" id="trackList"></ul>
-      </article>
-    </section>
-
-    <footer class="footer">Designed and developed for <b>Michael Skinner</b> • Skinner Central</footer>
-  </main>
-
-  <script>
-    const storage = {
-      get(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } },
-      set(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-    };
-
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('date').textContent = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-    }
-    updateClock(); setInterval(updateClock, 1000);
-
-    const notes = document.getElementById('mixNotes');
-    const saveStatus = document.getElementById('saveStatus');
-    notes.value = storage.get('djMixNotes', '');
-    let saveTimer;
-    notes.addEventListener('input', () => {
-      clearTimeout(saveTimer);
-      saveStatus.textContent = 'Saving…';
-      saveTimer = setTimeout(() => { storage.set('djMixNotes', notes.value); saveStatus.textContent = 'Saved'; setTimeout(() => saveStatus.textContent = '', 1400); }, 350);
-    });
-
-    let taps = [];
-    let currentBpm = 0;
-    const bpmValue = document.getElementById('bpmValue');
-    function showBpm(value) { currentBpm = value; bpmValue.innerHTML = (value ? Math.round(value) : '---') + '<span>BPM</span>'; }
-    document.getElementById('tapButton').addEventListener('click', () => {
-      const now = performance.now();
-      if (taps.length && now - taps[taps.length - 1] > 2200) taps = [];
-      taps.push(now);
-      if (taps.length > 8) taps.shift();
-      if (taps.length > 1) {
-        const intervals = taps.slice(1).map((tap, i) => tap - taps[i]);
-        const average = intervals.reduce((a,b) => a+b, 0) / intervals.length;
-        showBpm(60000 / average);
-      }
-    });
-    document.getElementById('resetBpm').addEventListener('click', () => { taps = []; showBpm(0); });
-    document.getElementById('halfBpm').addEventListener('click', () => { if (currentBpm) showBpm(currentBpm / 2); });
-    document.getElementById('doubleBpm').addEventListener('click', () => { if (currentBpm) showBpm(currentBpm * 2); });
-
-    let tracks = storage.get('djSetTracks', []);
-    const trackList = document.getElementById('trackList');
-    function renderTracks() {
-      trackList.innerHTML = '';
-      if (!tracks.length) {
-        trackList.innerHTML = '<li class="empty">Your planned tracks will appear here.</li>';
-        return;
-      }
-      tracks.forEach((track, index) => {
-        const li = document.createElement('li');
-        li.className = 'track-item';
-        li.innerHTML = `<span class="track-number">${index + 1}</span><strong class="track-name"></strong><span class="track-meta">${track.bpm ? track.bpm + ' BPM' : 'No BPM'}</span><span class="track-meta">${track.key || 'No key'}</span><button class="remove" aria-label="Remove track">×</button>`;
-        li.querySelector('.track-name').textContent = track.name;
-        li.querySelector('.remove').addEventListener('click', () => { tracks.splice(index, 1); storage.set('djSetTracks', tracks); renderTracks(); });
-        trackList.appendChild(li);
-      });
-    }
-    document.getElementById('trackForm').addEventListener('submit', event => {
-      event.preventDefault();
-      const name = document.getElementById('trackName').value.trim();
-      const bpm = document.getElementById('trackBpm').value;
-      const key = document.getElementById('trackKey').value;
-      if (!name) return;
-      tracks.push({ name, bpm, key });
-      storage.set('djSetTracks', tracks);
-      event.target.reset();
-      renderTracks();
-    });
-    renderTracks();
-  </script>
+  <footer class="footer">Designed and developed for <b>Michael Skinner</b> • Skinner Central</footer>
+</main>
+<script>
+  const starterVideos=[
+    {id:'y6120QOlsfU',title:'Darude – Sandstorm',type:'Dance classic'},
+    {id:'_ovdm2yX4MA',title:'Avicii – Levels',type:'Festival anthem'},
+    {id:'ebXbLfLACGM',title:'Calvin Harris – Summer',type:'Dance pop'},
+    {id:'p3l7fgvrEKM',title:'Gala – Freed From Desire',type:'90s anthem'},
+    {id:'4G6QDNC4jPs',title:'Cascada – Everytime We Touch',type:'Club classic'},
+    {id:'JRfuAukYTKg',title:'David Guetta ft. Sia – Titanium',type:'EDM anthem'},
+    {id:'1y6smkh6c-0',title:"Swedish House Mafia – Don't You Worry Child",type:'Festival classic'},
+    {id:'P8JEm4d6Wu4',title:'Faithless – Insomnia',type:'Dance classic'},
+    {id:'CC5ca6Hsb2Q',title:'Robert Miles – Children',type:'Trance classic'}
+  ];
+  const storage={get(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
+  let added=storage.get('djMusicVideos',[]);
+  function extractYouTubeId(url){
+    try{const u=new URL(url.trim());if(u.hostname.includes('youtu.be'))return u.pathname.slice(1).split('/')[0];if(u.hostname.includes('youtube.com')){if(u.pathname.startsWith('/shorts/'))return u.pathname.split('/')[2];if(u.pathname.startsWith('/embed/'))return u.pathname.split('/')[2];return u.searchParams.get('v')}}catch{}return null;
+  }
+  function card(video,isStarter=false,index=0){
+    const article=document.createElement('article');article.className='video-card'+(isStarter?' starter':'');
+    article.innerHTML=`<div class="video-wrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${video.id}" title="${video.title||'YouTube music video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><div><strong></strong><span>${video.type||'Added video'}</span></div><button class="remove" aria-label="Remove video">×</button></div>`;
+    article.querySelector('strong').textContent=video.title||'My YouTube music video';
+    if(!isStarter)article.querySelector('.remove').addEventListener('click',()=>{added.splice(index,1);storage.set('djMusicVideos',added);render()});
+    return article;
+  }
+  function render(){const grid=document.getElementById('videoGrid');grid.innerHTML='';starterVideos.forEach(v=>grid.appendChild(card(v,true)));added.forEach((v,i)=>grid.appendChild(card(v,false,i)))}
+  document.getElementById('addVideo').addEventListener('click',()=>{const input=document.getElementById('videoUrl');const id=extractYouTubeId(input.value);if(!id){alert('Please paste a valid YouTube video link.');return}added.unshift({id,title:'My added music video',type:'Personal selection'});storage.set('djMusicVideos',added);input.value='';render()});
+  document.getElementById('clearAdded').addEventListener('click',()=>{if(added.length&&confirm('Remove all videos you added?')){added=[];storage.set('djMusicVideos',added);render()}});
+  function updateClock(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});document.getElementById('date').textContent=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}updateClock();setInterval(updateClock,1000);render();
+</script>
 </body>
 </html>
