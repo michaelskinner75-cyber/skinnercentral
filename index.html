@@ -1,87 +1,107 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#07090f">
-  <title>DJ Skinner Music TV | Skinner Central</title>
-  <style>
-    :root{--bg:#07090f;--panel:rgba(18,22,35,.88);--text:#f7f8ff;--muted:#a6acc3;--accent:#7c5cff;--accent2:#1fd1f9;--border:rgba(255,255,255,.11);--danger:#ff5577;--radius:22px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 10% 5%,rgba(124,92,255,.28),transparent 27%),radial-gradient(circle at 90% 15%,rgba(31,209,249,.18),transparent 25%),linear-gradient(155deg,#05060a,#0a0d17 50%,#05060b);background-attachment:fixed}
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px}
-    button,input{font:inherit}.shell{width:min(1400px,calc(100% - 28px));margin:auto;padding:16px 0 70px}.topbar{position:sticky;top:8px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border:1px solid var(--border);border-radius:19px;background:rgba(8,10,17,.84);backdrop-filter:blur(20px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
-    .brand{display:flex;align-items:center;gap:11px}.logo{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;background:linear-gradient(135deg,var(--accent),var(--accent2))}.brand h1{margin:0;font-size:1rem}.brand small{display:block;color:var(--muted);margin-top:2px}.clock{text-align:right}.clock strong{display:block}.clock span{color:var(--muted);font-size:.75rem}
-    .hero{margin:22px 0 18px;padding:clamp(24px,5vw,52px);border:1px solid var(--border);border-radius:30px;background:linear-gradient(145deg,rgba(31,37,58,.9),rgba(10,13,22,.9));box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-100px;bottom:-130px;background:radial-gradient(circle,rgba(31,209,249,.38),transparent 68%)}.eyebrow{color:var(--accent2);font-size:.75rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h2{font-size:clamp(2.35rem,7vw,5.5rem);line-height:.92;letter-spacing:-.055em;margin:12px 0 16px}.hero h2 span{display:block;background:linear-gradient(90deg,#fff,#a99aff 50%,#55dcff);-webkit-background-clip:text;color:transparent}.hero p{position:relative;z-index:1;color:var(--muted);line-height:1.6;max-width:700px;margin:0}.hero-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{border:0;border-radius:13px;padding:12px 16px;color:white;background:linear-gradient(135deg,var(--accent),#5d42e8);font-weight:800;text-decoration:none;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.07);border:1px solid var(--border)}
-    .toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:18px 0}.toolbar input{width:100%;min-width:0;color:white;background:rgba(5,7,12,.72);border:1px solid var(--border);border-radius:14px;padding:13px 14px;outline:none}.toolbar input:focus{border-color:rgba(124,92,255,.8);box-shadow:0 0 0 3px rgba(124,92,255,.13)}
-    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 2px 13px}.section-head h3{margin:0}.section-head span{color:var(--muted);font-size:.8rem}.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.video-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel);box-shadow:0 14px 35px rgba(0,0,0,.28)}.video-wrap{position:relative;aspect-ratio:16/9;background:#000}.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.video-info{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px}.video-info strong{font-size:.9rem}.video-info span{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}.remove{border:0;background:transparent;color:var(--danger);font-size:1.25rem;cursor:pointer}.starter .remove{display:none}
-    .genres{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.genre{display:block;padding:17px 12px;text-align:center;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.045);color:white;text-decoration:none;font-weight:750}.genre:hover{background:rgba(255,255,255,.09)}.empty{grid-column:1/-1;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:18px;padding:28px}.footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:28px}.footer b{color:white}
-    @media(max-width:1050px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.genres{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:650px){.shell{width:calc(100% - 18px);padding-top:9px}.brand small{display:none}.hero{margin-top:13px;border-radius:23px}.video-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.genres{grid-template-columns:repeat(2,1fr)}.section-head{align-items:start;flex-direction:column}.clock span{display:none}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090f">
+<title>DJ Skinner Music TV | Skinner Central</title>
+<style>
+:root{--bg:#07090f;--panel:rgba(18,22,35,.9);--text:#f7f8ff;--muted:#a6acc3;--accent:#7c5cff;--accent2:#1fd1f9;--border:rgba(255,255,255,.11);--danger:#ff5577;--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 10% 5%,rgba(124,92,255,.28),transparent 27%),radial-gradient(circle at 90% 15%,rgba(31,209,249,.18),transparent 25%),linear-gradient(155deg,#05060a,#0a0d17 50%,#05060b);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px}.shell{width:min(1450px,calc(100% - 28px));margin:auto;padding:16px 0 70px}.topbar{position:sticky;top:8px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border:1px solid var(--border);border-radius:19px;background:rgba(8,10,17,.86);backdrop-filter:blur(20px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;background:linear-gradient(135deg,var(--accent),var(--accent2))}.brand h1{margin:0;font-size:1rem}.brand small{display:block;color:var(--muted);margin-top:2px}.clock{text-align:right}.clock strong{display:block}.clock span{color:var(--muted);font-size:.75rem}
+.hero{margin:22px 0 18px;padding:clamp(24px,5vw,52px);border:1px solid var(--border);border-radius:30px;background:linear-gradient(145deg,rgba(31,37,58,.9),rgba(10,13,22,.9));box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-100px;bottom:-130px;background:radial-gradient(circle,rgba(31,209,249,.38),transparent 68%)}.eyebrow{color:var(--accent2);font-size:.75rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h2{font-size:clamp(2.35rem,7vw,5.5rem);line-height:.92;letter-spacing:-.055em;margin:12px 0 16px}.hero h2 span{display:block;background:linear-gradient(90deg,#fff,#a99aff 50%,#55dcff);-webkit-background-clip:text;color:transparent}.hero p{position:relative;z-index:1;color:var(--muted);line-height:1.6;max-width:760px;margin:0}.hero-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{border:0;border-radius:13px;padding:12px 16px;color:white;background:linear-gradient(135deg,var(--accent),#5d42e8);font-weight:800;text-decoration:none;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.07);border:1px solid var(--border)}
+.toolbar{display:grid;grid-template-columns:1fr 170px auto auto;gap:10px;margin:18px 0}.toolbar input,.toolbar select{width:100%;min-width:0;color:white;background:rgba(5,7,12,.72);border:1px solid var(--border);border-radius:14px;padding:13px 14px;outline:none}.tabs{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:thin}.tab{white-space:nowrap;border:1px solid var(--border);background:rgba(255,255,255,.045);color:white;border-radius:999px;padding:10px 15px;font-weight:800;cursor:pointer}.tab.active{background:linear-gradient(135deg,var(--accent),#5d42e8);border-color:transparent}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:20px 2px 13px}.section-head h3{margin:0}.section-head span{color:var(--muted);font-size:.8rem}.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.video-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel);box-shadow:0 14px 35px rgba(0,0,0,.28)}.video-wrap{position:relative;aspect-ratio:16/9;background:#000}.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.search-card{display:grid;place-items:center;aspect-ratio:16/9;padding:20px;text-align:center;background:linear-gradient(135deg,rgba(124,92,255,.28),rgba(31,209,249,.12));color:white;text-decoration:none}.search-card strong{display:block;font-size:1.05rem}.search-card span{display:block;color:var(--muted);font-size:.8rem;margin-top:7px}.video-info{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px}.video-info strong{font-size:.9rem}.video-info span{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}.remove{border:0;background:transparent;color:var(--danger);font-size:1.25rem;cursor:pointer}.starter .remove{display:none}.empty{grid-column:1/-1;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:18px;padding:28px}.footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:28px}.footer b{color:white}
+@media(max-width:1050px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{grid-template-columns:1fr 150px}.toolbar .btn{width:100%}}
+@media(max-width:650px){.shell{width:calc(100% - 18px);padding-top:9px}.brand small{display:none}.hero{margin-top:13px;border-radius:23px}.video-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar input,.toolbar select{grid-column:1/-1}.section-head{align-items:start;flex-direction:column}.clock span{display:none}}
+</style>
 </head>
 <body>
 <main class="shell">
-  <header class="topbar">
-    <div class="brand"><div class="logo">📺</div><div><h1>DJ Skinner Music TV</h1><small>Skinner Central</small></div></div>
-    <div class="clock"><strong id="clock">--:--</strong><span id="date">Loading…</span></div>
-  </header>
-
-  <section class="hero">
-    <div class="eyebrow">DJ Skinner • Music Video Hub</div>
-    <h2>Music <span>Video Wall</span></h2>
-    <p>Watch dance classics, club anthems and happy-hardcore favourites in one place. Add any YouTube music video by pasting its link below.</p>
-    <div class="hero-actions"><a class="btn" href="#videos">Watch videos</a><a class="btn secondary" href="https://www.youtube.com/results?search_query=dance+music+videos" target="_blank" rel="noopener">Find more on YouTube</a></div>
-  </section>
-
-  <div class="toolbar">
-    <input id="videoUrl" type="url" placeholder="Paste a YouTube video link here…" aria-label="YouTube video link">
-    <button class="btn" id="addVideo">Add video</button>
-    <button class="btn secondary" id="clearAdded">Clear added</button>
-  </div>
-
-  <div class="section-head" id="videos"><h3>Featured music videos</h3><span>Tap play on any video</span></div>
-  <section class="video-grid" id="videoGrid"></section>
-
-  <div class="section-head"><h3>Explore more music</h3><span>Opens YouTube results</span></div>
-  <section class="genres">
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=90s+dance+music+videos">💿 90s Dance</a>
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=2000s+club+anthems+music+videos">🔥 Club Anthems</a>
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=happy+hardcore+music+videos">⚡ Happy Hardcore</a>
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=GBX+anthems">🏴 GBX</a>
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=trance+classics+music+videos">🌌 Trance</a>
-    <a class="genre" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=modern+EDM+music+videos">🎛️ EDM</a>
-  </section>
-
-  <footer class="footer">Designed and developed for <b>Michael Skinner</b> • Skinner Central</footer>
+<header class="topbar"><div class="brand"><div class="logo">📺</div><div><h1>DJ Skinner Music TV</h1><small>Skinner Central</small></div></div><div class="clock"><strong id="clock">--:--</strong><span id="date">Loading…</span></div></header>
+<section class="hero"><div class="eyebrow">DJ Skinner • Music Video Hub</div><h2>Music <span>Video Wall</span></h2><p>Browse dance music by category, play featured videos and build your own saved collection by pasting YouTube links.</p><div class="hero-actions"><a class="btn" href="#videos">Browse categories</a><a class="btn secondary" href="https://www.youtube.com/results?search_query=dance+music+videos" target="_blank" rel="noopener">Find more on YouTube</a></div></section>
+<div class="toolbar"><input id="videoUrl" type="url" placeholder="Paste a YouTube video link here…"><select id="videoCategory"><option>90s</option><option>Club</option><option>Trance</option><option>Happy Hardcore</option><option>GBX</option><option>EDM</option><option>2000s</option><option>DJ Remix</option><option>Bootleg</option></select><button class="btn" id="addVideo">Add video</button><button class="btn secondary" id="clearAdded">Clear added</button></div>
+<div class="tabs" id="tabs"></div>
+<div class="section-head" id="videos"><h3 id="categoryTitle">90s</h3><span id="videoCount"></span></div>
+<section class="video-grid" id="videoGrid"></section>
+<footer class="footer">Designed and developed for <b>Michael Skinner</b> • Skinner Central</footer>
 </main>
 <script>
-  const starterVideos=[
-    {id:'y6120QOlsfU',title:'Darude – Sandstorm',type:'Dance classic'},
-    {id:'_ovdm2yX4MA',title:'Avicii – Levels',type:'Festival anthem'},
-    {id:'ebXbLfLACGM',title:'Calvin Harris – Summer',type:'Dance pop'},
-    {id:'p3l7fgvrEKM',title:'Gala – Freed From Desire',type:'90s anthem'},
-    {id:'4G6QDNC4jPs',title:'Cascada – Everytime We Touch',type:'Club classic'},
-    {id:'JRfuAukYTKg',title:'David Guetta ft. Sia – Titanium',type:'EDM anthem'},
-    {id:'1y6smkh6c-0',title:"Swedish House Mafia – Don't You Worry Child",type:'Festival classic'},
-    {id:'P8JEm4d6Wu4',title:'Faithless – Insomnia',type:'Dance classic'},
-    {id:'CC5ca6Hsb2Q',title:'Robert Miles – Children',type:'Trance classic'}
-  ];
-  const storage={get(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
-  let added=storage.get('djMusicVideos',[]);
-  function extractYouTubeId(url){
-    try{const u=new URL(url.trim());if(u.hostname.includes('youtu.be'))return u.pathname.slice(1).split('/')[0];if(u.hostname.includes('youtube.com')){if(u.pathname.startsWith('/shorts/'))return u.pathname.split('/')[2];if(u.pathname.startsWith('/embed/'))return u.pathname.split('/')[2];return u.searchParams.get('v')}}catch{}return null;
-  }
-  function card(video,isStarter=false,index=0){
-    const article=document.createElement('article');article.className='video-card'+(isStarter?' starter':'');
-    article.innerHTML=`<div class="video-wrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${video.id}" title="${video.title||'YouTube music video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><div><strong></strong><span>${video.type||'Added video'}</span></div><button class="remove" aria-label="Remove video">×</button></div>`;
-    article.querySelector('strong').textContent=video.title||'My YouTube music video';
-    if(!isStarter)article.querySelector('.remove').addEventListener('click',()=>{added.splice(index,1);storage.set('djMusicVideos',added);render()});
-    return article;
-  }
-  function render(){const grid=document.getElementById('videoGrid');grid.innerHTML='';starterVideos.forEach(v=>grid.appendChild(card(v,true)));added.forEach((v,i)=>grid.appendChild(card(v,false,i)))}
-  document.getElementById('addVideo').addEventListener('click',()=>{const input=document.getElementById('videoUrl');const id=extractYouTubeId(input.value);if(!id){alert('Please paste a valid YouTube video link.');return}added.unshift({id,title:'My added music video',type:'Personal selection'});storage.set('djMusicVideos',added);input.value='';render()});
-  document.getElementById('clearAdded').addEventListener('click',()=>{if(added.length&&confirm('Remove all videos you added?')){added=[];storage.set('djMusicVideos',added);render()}});
-  function updateClock(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});document.getElementById('date').textContent=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}updateClock();setInterval(updateClock,1000);render();
+const categories=['90s','Club','Trance','Happy Hardcore','GBX','EDM','2000s','DJ Remix','Bootleg'];
+const library={
+'90s':[
+{id:'p3l7fgvrEKM',title:'Gala – Freed From Desire',type:'90s anthem'},
+{id:'y6120QOlsfU',title:'Darude – Sandstorm',type:'Dance classic'},
+{id:'P8JEm4d6Wu4',title:'Faithless – Insomnia',type:'Club classic'},
+{id:'CC5ca6Hsb2Q',title:'Robert Miles – Children',type:'Trance classic'},
+{search:'90s eurodance official music videos',title:'More 90s Eurodance'},
+{search:'90s club classics music videos',title:'More 90s Club Classics'}],
+'Club':[
+{id:'4G6QDNC4jPs',title:'Cascada – Everytime We Touch',type:'Club classic'},
+{id:'JRfuAukYTKg',title:'David Guetta ft. Sia – Titanium',type:'Club anthem'},
+{id:'1y6smkh6c-0',title:"Swedish House Mafia – Don't You Worry Child",type:'Festival classic'},
+{id:'ebXbLfLACGM',title:'Calvin Harris – Summer',type:'Dance pop'},
+{search:'club anthems official music videos',title:'More Club Anthems'},
+{search:'dancefloor fillers music videos',title:'Dancefloor Fillers'}],
+'Trance':[
+{id:'CC5ca6Hsb2Q',title:'Robert Miles – Children',type:'Trance classic'},
+{id:'y6120QOlsfU',title:'Darude – Sandstorm',type:'Trance anthem'},
+{id:'P8JEm4d6Wu4',title:'Faithless – Insomnia',type:'Classic trance'},
+{search:'classic trance official music videos',title:'Classic Trance'},
+{search:'uplifting trance music videos',title:'Uplifting Trance'},
+{search:'vocal trance classics music videos',title:'Vocal Trance'}],
+'Happy Hardcore':[
+{search:'happy hardcore official music videos',title:'Happy Hardcore Anthems'},
+{search:'UK hardcore classics music videos',title:'UK Hardcore Classics'},
+{search:'bonkers happy hardcore tracks',title:'Bonkers Favourites'},
+{search:'happy hardcore remixes',title:'Happy Hardcore Remixes'},
+{search:'Scott Brown happy hardcore',title:'Scott Brown'},
+{search:'Ultrabeat music videos',title:'Ultrabeat'}],
+'GBX':[
+{search:'GBX anthems',title:'GBX Anthems'},
+{search:'George Bowie GBX',title:'George Bowie'},
+{search:'GBX classic dance tracks',title:'GBX Classics'},
+{search:'GBX remixes',title:'GBX Remixes'},
+{search:'GBX live set',title:'GBX Live Sets'},
+{search:'GBX radio anthems',title:'GBX Radio Anthems'}],
+'EDM':[
+{id:'_ovdm2yX4MA',title:'Avicii – Levels',type:'Festival anthem'},
+{id:'JRfuAukYTKg',title:'David Guetta ft. Sia – Titanium',type:'EDM anthem'},
+{id:'1y6smkh6c-0',title:"Swedish House Mafia – Don't You Worry Child",type:'Festival classic'},
+{id:'ebXbLfLACGM',title:'Calvin Harris – Summer',type:'EDM hit'},
+{search:'EDM festival anthems music videos',title:'Festival Anthems'},
+{search:'big room EDM classics',title:'Big Room EDM'}],
+'2000s':[
+{id:'4G6QDNC4jPs',title:'Cascada – Everytime We Touch',type:'2000s club classic'},
+{id:'y6120QOlsfU',title:'Darude – Sandstorm',type:'2000s dance'},
+{id:'P8JEm4d6Wu4',title:'Faithless – Insomnia',type:'Club favourite'},
+{search:'2000s dance music videos',title:'2000s Dance Hits'},
+{search:'2000s club anthems official videos',title:'2000s Club Anthems'},
+{search:'2000s trance classics',title:'2000s Trance'}],
+'DJ Remix':[
+{search:'DJ remix music videos',title:'Latest DJ Remixes'},
+{search:'dance remix official music video',title:'Dance Remixes'},
+{search:'club remix music videos',title:'Club Remixes'},
+{search:'90s songs remixed dance',title:'90s Remixed'},
+{search:'2000s songs remixed dance',title:'2000s Remixed'},
+{search:'festival remix music videos',title:'Festival Remixes'}],
+'Bootleg':[
+{search:'dance music bootleg remix',title:'Dance Bootlegs'},
+{search:'club bootleg remix',title:'Club Bootlegs'},
+{search:'90s bootleg remix',title:'90s Bootlegs'},
+{search:'happy hardcore bootleg remix',title:'Hardcore Bootlegs'},
+{search:'trance bootleg remix',title:'Trance Bootlegs'},
+{search:'GBX bootleg remix',title:'GBX Bootlegs'}]
+};
+const storage={get(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
+let added=storage.get('djMusicVideosByCategory',{});let active='90s';
+function extractYouTubeId(url){try{const u=new URL(url.trim());if(u.hostname.includes('youtu.be'))return u.pathname.slice(1).split('/')[0];if(u.hostname.includes('youtube.com')){if(u.pathname.startsWith('/shorts/'))return u.pathname.split('/')[2];if(u.pathname.startsWith('/embed/'))return u.pathname.split('/')[2];return u.searchParams.get('v')}}catch{}return null}
+function renderTabs(){const tabs=document.getElementById('tabs');tabs.innerHTML='';categories.forEach(c=>{const b=document.createElement('button');b.className='tab'+(c===active?' active':'');b.textContent=c;b.onclick=()=>{active=c;renderTabs();render()};tabs.appendChild(b)})}
+function card(v,index,isAdded){const a=document.createElement('article');a.className='video-card'+(isAdded?'':' starter');if(v.search){const link='https://www.youtube.com/results?search_query='+encodeURIComponent(v.search);a.innerHTML=`<a class="search-card" href="${link}" target="_blank" rel="noopener"><div><strong>${v.title}</strong><span>Open a full YouTube selection</span></div></a><div class="video-info"><div><strong>${v.title}</strong><span>${active}</span></div></div>`;return a}a.innerHTML=`<div class="video-wrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${v.id}" title="${v.title||'Music video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><div><strong></strong><span>${v.type||'Personal selection'}</span></div><button class="remove" aria-label="Remove video">×</button></div>`;a.querySelector('strong').textContent=v.title||'My added music video';if(isAdded)a.querySelector('.remove').onclick=()=>{added[active].splice(index,1);storage.set('djMusicVideosByCategory',added);render()};return a}
+function render(){document.getElementById('categoryTitle').textContent=active;const grid=document.getElementById('videoGrid');grid.innerHTML='';const base=library[active]||[];const custom=added[active]||[];[...base].forEach(v=>grid.appendChild(card(v,0,false)));custom.forEach((v,i)=>grid.appendChild(card(v,i,true)));document.getElementById('videoCount').textContent=(base.length+custom.length)+' selections'}
+document.getElementById('addVideo').onclick=()=>{const input=document.getElementById('videoUrl');const category=document.getElementById('videoCategory').value;const id=extractYouTubeId(input.value);if(!id){alert('Please paste a valid YouTube video link.');return}added[category]=added[category]||[];added[category].unshift({id,title:'My added music video',type:'Personal selection'});storage.set('djMusicVideosByCategory',added);input.value='';active=category;renderTabs();render()};
+document.getElementById('clearAdded').onclick=()=>{if(confirm('Remove all videos you added?')){added={};storage.set('djMusicVideosByCategory',added);render()}};
+function updateClock(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});document.getElementById('date').textContent=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}updateClock();setInterval(updateClock,1000);renderTabs();render();
 </script>
 </body>
 </html>
