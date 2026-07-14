@@ -22,12 +22,9 @@
   .ticket{position:relative;background:var(--card);color:var(--ink);border-radius:4px;padding:8px 12px 28px;box-shadow:0 10px 34px rgba(0,0,0,.35);overflow:hidden}
   .demo-ribbon{position:absolute;top:18px;right:-42px;transform:rotate(35deg);background:#c62828;color:white;padding:5px 50px;font-weight:800;font-size:12px;letter-spacing:.08em;z-index:5}
   .fare{height:62px;background:#121619;color:#fff;border-radius:0 0 24px 0;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:27px;font-weight:700}
-  .qr{width:210px;aspect-ratio:1;margin:30px auto 28px;background:
-      linear-gradient(90deg,#111 10px,transparent 10px) 0 0/18px 18px,
-      linear-gradient(#111 10px,transparent 10px) 0 0/18px 18px,
-      repeating-conic-gradient(#111 0 25%,#fff 0 50%) 0 0/12px 12px;
-      border:10px solid #fff;outline:2px solid #111;filter:contrast(1.15)}
-  .qr::after{content:"DEMO";display:grid;place-items:center;width:100%;height:100%;font-weight:900;font-size:32px;color:#c62828;background:rgba(255,255,255,.78)}
+  .qr{width:210px;aspect-ratio:1;margin:30px auto 28px;background:#fff;border:10px solid #fff;outline:2px solid #111;position:relative}
+  .qr svg{display:block;width:100%;height:100%}
+  .qr-label{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);background:#fff;color:#c62828;border:3px solid #c62828;border-radius:8px;padding:5px 8px;font-size:20px;font-weight:900;letter-spacing:.08em}
   h1{font-size:34px;text-align:center;margin:0 0 58px;font-weight:500;line-height:1.05}
   .valid{text-align:center;font-size:22px;margin-bottom:12px}
   .motion-wrap{height:92px;margin:0 -7px 18px;display:flex;align-items:center;overflow:hidden}
@@ -54,7 +51,18 @@
   <main class="ticket">
     <div class="demo-ribbon">DEMO ONLY</div>
     <div class="fare"><span>1 Adult</span><span>£12.80</span></div>
-    <div class="qr" aria-label="Non-scannable demo code"></div>
+    <div class="qr" aria-label="Non-scannable demo QR graphic">
+      <svg viewBox="0 0 29 29" role="img" aria-hidden="true" shape-rendering="crispEdges">
+        <rect width="29" height="29" fill="#fff"/>
+        <g fill="#111">
+          <rect x="1" y="1" width="7" height="7"/><rect x="2" y="2" width="5" height="5" fill="#fff"/><rect x="3" y="3" width="3" height="3"/>
+          <rect x="21" y="1" width="7" height="7"/><rect x="22" y="2" width="5" height="5" fill="#fff"/><rect x="23" y="3" width="3" height="3"/>
+          <rect x="1" y="21" width="7" height="7"/><rect x="2" y="22" width="5" height="5" fill="#fff"/><rect x="3" y="23" width="3" height="3"/>
+          <path d="M10 1h2v1h-1v1h2v2h-1v1h-2V5H9V3h1zm5 0h3v1h1v2h-2V3h-2zm-5 7h2v1h2v2h-1v1h-3zm5 0h2v2h2v1h-1v2h-2v-1h-2v-2h1zm5 1h1v2h2v1h2v2h-3v-1h-2zm-10 5h3v1h1v2h-2v1h-2zm5 0h2v1h2v2h-1v2h-2v-1h-2v-2h1zm6 2h2v1h1v2h-2v1h-2v-2h1zm-11 4h2v2h2v1h-1v2h-3v-1H9v-2h1zm5 1h2v1h2v2h-1v2h-2v-1h-2v-2h1zm5 2h2v-2h2v1h2v2h-1v2h-2v-1h-3z"/>
+        </g>
+      </svg>
+      <span class="qr-label">DEMO</span>
+    </div>
     <h1>East Scotland DayRider</h1>
     <div class="valid" id="validDate">Valid from: 00:00, 14 Jul 2026</div>
 
