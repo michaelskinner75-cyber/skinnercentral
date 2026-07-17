@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
-import { getDatabase, ref, get, update, onValue } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js';
+import { getDatabase, ref, update, onValue } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js';
 
 const firebaseConfig={apiKey:'AIzaSyAhQcvXPsAkc22WQmnLII17JUNnYj_oeKQ',authDomain:'skinners-bar-bingo.firebaseapp.com',databaseURL:'https://skinners-bar-bingo-default-rtdb.europe-west1.firebasedatabase.app',projectId:'skinners-bar-bingo',storageBucket:'skinners-bar-bingo.firebasestorage.app',messagingSenderId:'1033478065497',appId:'1:1033478065497:web:e7b4904fd9ef7afd171048'};
 const app=getApps().find(a=>a.options.projectId===firebaseConfig.projectId)||initializeApp(firebaseConfig,'shared-game-flow');
@@ -12,6 +12,7 @@ let latestRoom=null;
 let countdownTimer=null;
 let bypassStart=false;
 let autoStartedForRound=false;
+let countdownWritePending=false;
 
 const style=document.createElement('style');
 style.textContent=`
@@ -30,29 +31,32 @@ function detectRoom(){
 }
 setInterval(detectRoom,400);
 
+function humanPlayers(room){return Object.entries(room.players||{}).filter(([,p])=>p.connected&&!p.computer);}
+function allHumansReady(room){const humans=humanPlayers(room);return humans.length>0&&humans.every(([,p])=>p.ready===true);}
+
+async function maybeStartCountdown(room){
+  if(countdownWritePending||room.phase!=='lobby'||room.hostId!==playerId||room.startCountdownAt||!allHumansReady(room))return;
+  countdownWritePending=true;
+  try{await update(ref(db,`rooms/${roomCode}`),{startCountdownAt:Date.now()+5000,announcement:'All players ready — eyes down in 5!'});}finally{countdownWritePending=false;}
+}
+
 function subscribeRoom(){
   roomUnsub?.();
   roomUnsub=onValue(ref(db,`rooms/${roomCode}`),snap=>{
     if(!snap.exists())return;
     latestRoom=snap.val();
     renderReadyState();
+    maybeStartCountdown(latestRoom);
     syncCountdown();
     syncAutoStart();
   });
 }
 
-function humanPlayers(room){return Object.entries(room.players||{}).filter(([,p])=>p.connected&&!p.computer);}
-function allHumansReady(room){const humans=humanPlayers(room);return humans.length>0&&humans.every(([,p])=>p.ready===true);}
-
 async function toggleReady(){
-  if(!roomCode||!playerId||!latestRoom||latestRoom.phase!=='lobby')return;
+  if(!roomCode||!playerId||!latestRoom||latestRoom.phase!=='lobby'||latestRoom.startCountdownAt)return;
   const mine=latestRoom.players?.[playerId];
   if(!mine)return;
   await update(ref(db,`rooms/${roomCode}/players/${playerId}`),{ready:!mine.ready});
-  const fresh=(await get(ref(db,`rooms/${roomCode}`))).val();
-  if(fresh&&fresh.hostId===playerId&&allHumansReady(fresh)&&!fresh.startCountdownAt){
-    await update(ref(db,`rooms/${roomCode}`),{startCountdownAt:Date.now()+5000,announcement:'All players ready — eyes down in 5!'});
-  }
 }
 
 function renderReadyState(){
@@ -82,7 +86,7 @@ function syncCountdown(){
   const room=latestRoom;
   if(!room?.startCountdownAt||room.phase!=='lobby'){overlay.classList.add('hidden');clearInterval(countdownTimer);countdownTimer=null;return;}
   overlay.classList.remove('hidden');
-  const tick=async()=>{
+  const tick=()=>{
     const remaining=Math.max(0,Math.ceil((room.startCountdownAt-Date.now())/1000));
     $('sharedCountdownNumber').textContent=remaining||'GO!';
     if(remaining<=0){
