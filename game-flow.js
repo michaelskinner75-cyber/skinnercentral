@@ -92,9 +92,13 @@ function syncCountdown(){
     if(remaining<=0){
       clearInterval(countdownTimer);countdownTimer=null;
       if(room.hostId===playerId){
-        bypassStart=true;
-        $('startGameBtn')?.click();
-        setTimeout(()=>{bypassStart=false;},50);
+        const startBtn=$('startGameBtn');
+        if(startBtn){
+          bypassStart=true;
+          startBtn.disabled=false;
+          startBtn.click();
+          setTimeout(()=>{bypassStart=false;},100);
+        }
       }
     }
   };
