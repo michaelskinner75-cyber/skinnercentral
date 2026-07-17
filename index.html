@@ -13,7 +13,7 @@
     <header class="brand-bar"><div class="brand-mark">SB</div><div><div class="eyebrow">Welcome to</div><h1>Skinners Bar Bingo</h1></div><button id="soundBtn" class="icon-button" aria-label="Toggle sound">🔊</button></header>
 
     <section id="homeView" class="view active">
-      <div class="hero-card glass"><div class="neon-ball">90</div><h2>Bingo night, right in your pocket.</h2><p>Create an online room for friends to join from their own phones, with up to six cards each, room chat and an optional party mode.</p><div class="hero-actions"><button id="createGameBtn" class="btn btn-primary">Create Game</button><button id="showJoinBtn" class="btn btn-secondary">Join Game</button></div></div>
+      <div class="hero-card glass"><div class="neon-ball">90</div><h2>Bingo night, right in your pocket.</h2><p>Create an online room for friends to join from their own phones, with up to six cards each, live progress, room chat and an optional party mode.</p><div class="hero-actions"><button id="createGameBtn" class="btn btn-primary">Create Game</button><button id="showJoinBtn" class="btn btn-secondary">Join Game</button></div></div>
       <div id="createPanel" class="join-panel glass hidden">
         <h3>Game setup</h3>
         <label for="hostName">Your name</label><input id="hostName" maxlength="18" placeholder="Michael" autocomplete="nickname" />
@@ -30,7 +30,7 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
         <button id="confirmCreateBtn" class="btn btn-primary">Create Room</button><p id="createStatus" class="status-text"></p>
       </div>
       <div id="joinPanel" class="join-panel glass hidden"><label for="joinName">Your name</label><input id="joinName" maxlength="18" placeholder="Player name" autocomplete="nickname" /><label for="roomCodeInput">Room code</label><input id="roomCodeInput" maxlength="4" inputmode="numeric" placeholder="1234" /><button id="joinGameBtn" class="btn btn-primary">Join Room</button><p id="joinStatus" class="status-text"></p></div>
-      <div class="feature-grid"><div class="mini-card glass"><span>🎟️</span><b>1–6 cards each</b></div><div class="mini-card glass"><span>💬</span><b>Player room chat</b></div><div class="mini-card glass"><span>🥳</span><b>Optional party mode</b></div></div>
+      <div class="feature-grid"><div class="mini-card glass"><span>🎟️</span><b>1–6 cards each</b></div><div class="mini-card glass"><span>📊</span><b>Live win tracker</b></div><div class="mini-card glass"><span>💬</span><b>Player room chat</b></div></div>
     </section>
 
     <section id="lobbyView" class="view">
@@ -46,6 +46,7 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
       <div class="game-topline"><div class="glass current-ball-wrap"><div class="eyebrow">Current ball</div><div id="currentBall" class="current-ball">—</div></div><div class="glass game-meta"><div><span>Room</span><b id="gameRoomCode">----</b></div><div><span>Called</span><b id="calledCount">0 / 90</b></div></div></div>
       <div id="announcement" class="announcement">Eyes down!</div>
       <div id="partyAlert" class="party-alert glass hidden"><div class="party-icon">🎲</div><div><div class="eyebrow">Party challenge</div><strong id="partyChallengeText"></strong></div></div>
+      <section class="glass progress-panel"><div class="panel-heading"><h2>Live win tracker</h2><span id="closestSummary">Waiting for numbers</span></div><div id="progressLeaderboard" class="progress-leaderboard"></div></section>
       <div id="ticketsContainer" class="tickets-container"></div>
       <div class="claim-row"><button data-claim="line" class="btn claim-btn">Claim Line</button><button data-claim="two-lines" class="btn claim-btn">Claim 2 Lines</button><button data-claim="full-house" class="btn btn-primary claim-btn">Full House!</button></div>
       <section class="glass chat-panel"><div class="panel-heading"><h2>Room chat</h2><span>Last 50</span></div><div id="chatMessagesGame" class="chat-messages"></div><form id="chatFormGame" class="chat-form"><input id="chatInputGame" maxlength="180" placeholder="Write a message…" autocomplete="off"><button class="btn btn-secondary" type="submit">Send</button></form></section>
