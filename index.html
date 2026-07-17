@@ -11,6 +11,7 @@
     .ready-overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(7,3,8,.88);backdrop-filter:blur(14px)}
     .ready-card{width:min(430px,100%);padding:30px 24px;border-radius:28px;text-align:center}
     .ready-icon{font-size:4rem;margin-bottom:8px}.ready-card h2{font-size:clamp(1.8rem,8vw,2.5rem);margin:0 0 10px}.ready-card p{color:var(--muted);line-height:1.5;margin:0 0 18px}.ready-volume{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border-radius:15px;background:rgba(247,200,94,.1);color:var(--gold2);font-weight:800;margin-bottom:16px}.ready-status{margin:14px 0 0;color:var(--gold);font-weight:900}.countdown-number{font-size:7rem;line-height:1;font-weight:1000;color:var(--gold2);text-shadow:0 0 35px rgba(247,200,94,.5);margin:14px 0}
+    .room-share-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}.room-share-actions .btn{min-height:44px;padding:10px 16px}
   </style>
 </head>
 <body>
@@ -42,7 +43,7 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
     </section>
 
     <section id="lobbyView" class="view">
-      <div class="room-card glass"><div class="eyebrow">Room code</div><div id="roomCodeDisplay" class="room-code">----</div><button id="copyCodeBtn" class="text-button">Copy code</button></div>
+      <div class="room-card glass"><div class="eyebrow">Room code</div><div id="roomCodeDisplay" class="room-code">----</div><div class="room-share-actions"><button id="copyCodeBtn" class="btn btn-ghost">Copy code</button><button id="shareCodeBtn" class="btn btn-primary">📤 Share game code</button></div></div>
       <div class="glass panel"><div class="panel-heading"><h2>Players</h2><span id="playerCount">0 players</span></div><div id="modeBadge" class="mode-badge">Classic Bingo</div><div id="cardsBadge" class="mode-badge">1 card each</div><div id="playerList" class="player-list"></div></div>
       <div class="lobby-actions"><button id="startGameBtn" class="btn btn-primary hidden">Start Bingo</button><p id="waitingMessage" class="status-text">Waiting for the room creator to start…</p><button id="leaveLobbyBtn" class="btn btn-ghost">Leave Room</button></div>
     </section>
@@ -80,5 +81,6 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
   <div id="toast" class="toast hidden"></div>
   <script type="module" src="app.js"></script>
   <script type="module" src="ready-flow.js"></script>
+  <script type="module" src="share-code.js"></script>
 </body>
 </html>
