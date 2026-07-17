@@ -7,6 +7,11 @@
   <title>Skinners Bar Bingo</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="extras.css" />
+  <style>
+    .ready-overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(7,3,8,.88);backdrop-filter:blur(14px)}
+    .ready-card{width:min(430px,100%);padding:30px 24px;border-radius:28px;text-align:center}
+    .ready-icon{font-size:4rem;margin-bottom:8px}.ready-card h2{font-size:clamp(1.8rem,8vw,2.5rem);margin:0 0 10px}.ready-card p{color:var(--muted);line-height:1.5;margin:0 0 18px}.ready-volume{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border-radius:15px;background:rgba(247,200,94,.1);color:var(--gold2);font-weight:800;margin-bottom:16px}.ready-status{margin:14px 0 0;color:var(--gold);font-weight:900}.countdown-number{font-size:7rem;line-height:1;font-weight:1000;color:var(--gold2);text-shadow:0 0 35px rgba(247,200,94,.5);margin:14px 0}
+  </style>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -57,9 +62,23 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
     <footer>Created and developed by <strong>Michael Skinner</strong></footer>
   </main>
 
+  <div id="readyOverlay" class="ready-overlay hidden" role="dialog" aria-modal="true">
+    <div class="ready-card glass">
+      <div class="ready-icon">🎱</div>
+      <div class="eyebrow">Skinners Bar Bingo</div>
+      <h2 id="readyTitle">READY TO PLAY?</h2>
+      <p id="readyMessage">Please ensure your device volume is turned up so you can hear the bingo caller.</p>
+      <div class="ready-volume">🔊 Device volume on</div>
+      <div id="countdownNumber" class="countdown-number hidden">5</div>
+      <button id="playerReadyBtn" class="btn btn-primary">I’M READY</button>
+      <div id="readyStatus" class="ready-status">Waiting for players…</div>
+    </div>
+  </div>
+
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card glass"><div id="modalEmoji" class="modal-emoji">🎉</div><h2 id="modalTitle">Bingo!</h2><p id="modalMessage"></p><button id="modalCloseBtn" class="btn btn-primary">Continue</button></div></div>
   <div id="claimModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card glass claim-modal-card"><div id="claimEmoji" class="modal-emoji">🎉</div><h2 id="claimTitle">You have a line!</h2><p id="claimMessage">Your card is ready to claim.</p><div class="claim-popup-actions"><button id="claimNowBtn" class="btn btn-primary">Claim now</button><button id="claimLaterBtn" class="btn btn-ghost">Not yet</button></div></div></div>
   <div id="toast" class="toast hidden"></div>
   <script type="module" src="app.js"></script>
+  <script type="module" src="ready-flow.js"></script>
 </body>
 </html>
