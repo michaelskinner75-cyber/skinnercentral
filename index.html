@@ -33,7 +33,7 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
         <button id="confirmCreateBtn" class="btn btn-primary">Create Room</button><p id="createStatus" class="status-text"></p>
       </div>
       <div id="joinPanel" class="join-panel glass hidden"><label for="joinName">Your name</label><input id="joinName" maxlength="18" placeholder="Player name" autocomplete="nickname" /><label for="roomCodeInput">Room code</label><input id="roomCodeInput" maxlength="4" inputmode="numeric" placeholder="1234" /><button id="joinGameBtn" class="btn btn-primary">Join Room</button><p id="joinStatus" class="status-text"></p></div>
-      <div class="feature-grid"><div class="mini-card glass"><span>🎟️</span><b>1–6 cards each</b></div><div class="mini-card glass"><span>🤖</span><b>Computer opponents</b></div><div class="mini-card glass"><span>📊</span><b>Live win tracker</b></div></div>
+      <div class="feature-grid"><div class="mini-card glass"><span>🎟️</span><b>1–6 cards each</b></div><div class="mini-card glass"><span>🤖</span><b>Computer opponents</b></div><div class="mini-card glass"><span>🏆</span><b>Live leader</b></div></div>
     </section>
 
     <section id="lobbyView" class="view">
@@ -48,10 +48,10 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
       <div class="game-topline"><div class="glass current-ball-wrap"><div class="eyebrow">Current ball</div><div id="currentBall" class="current-ball">—</div></div><div class="glass game-meta"><div><span>Room</span><b id="gameRoomCode">----</b></div><div><span>Called</span><b id="calledCount">0 / 90</b></div></div></div>
       <div id="announcement" class="announcement">Eyes down!</div>
       <div id="partyAlert" class="party-alert glass hidden"><div class="party-icon">🎲</div><div><div class="eyebrow">Party challenge</div><strong id="partyChallengeText"></strong></div></div>
-      <section class="glass progress-panel"><div class="panel-heading"><h2>Live win tracker</h2><span id="closestSummary">Waiting for numbers</span></div><div id="progressLeaderboard" class="progress-leaderboard"></div></section>
+      <section class="glass progress-panel compact-leader"><div class="panel-heading"><h2>🏆 In the lead</h2><span id="closestSummary">Waiting for numbers</span></div><div id="progressLeaderboard" class="progress-leaderboard"></div></section>
+      <section class="glass called-panel ball-machine"><div class="ball-machine-top"><div><div class="eyebrow">Called numbers</div><h2>Bingo ball machine</h2></div><button id="toggleBoardBtn" class="text-button">Show board</button></div><div class="ball-window"><div id="recentBalls" class="recent-balls"></div></div><div id="numberBoard" class="number-board hidden"></div></section>
       <div id="ticketsContainer" class="tickets-container"></div>
       <div id="hostControls" class="glass host-controls hidden"><div class="panel-heading"><h2>Game controls</h2><span>Creator</span></div><div class="control-grid"><button id="nextBallBtn" class="btn btn-secondary">Call Next</button><button id="autoCallBtn" class="btn btn-secondary">Start Auto</button><select id="speedSelect"><option value="4000">Fast · 4 sec</option><option value="6500" selected>Normal · 6.5 sec</option><option value="9000">Relaxed · 9 sec</option></select><button id="newRoundBtn" class="btn btn-ghost">New Round</button></div></div>
-      <div class="glass called-panel"><div class="panel-heading"><h2>Called numbers</h2><button id="toggleBoardBtn" class="text-button">Show board</button></div><div id="recentBalls" class="recent-balls"></div><div id="numberBoard" class="number-board hidden"></div></div>
     </section>
 
     <footer>Created and developed by <strong>Michael Skinner</strong></footer>
