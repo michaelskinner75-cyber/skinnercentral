@@ -54,7 +54,7 @@
         <label for="hostName">Your name</label><input id="hostName" maxlength="18" placeholder="Michael" autocomplete="nickname" />
         <label for="opponentMode">Who is playing?</label><select id="opponentMode"><option value="friends">Friends and family</option><option value="computer">Play against computer</option></select>
         <div id="computerSetup" class="hidden"><label for="computerCount">Computer opponents</label><select id="computerCount"><option value="1">1 computer</option><option value="2">2 computers</option><option value="3" selected>3 computers</option><option value="4">4 computers</option><option value="5">5 computers</option></select></div>
-        <label for="gameMode">Game type</label><select id="gameMode"><option value="classic">Classic Bingo</option><option value="party">Drinking & Dares Bingo</option></select>
+        <label for="gameMode">Game type</label><select id="gameMode"><option value="classic">Classic Bingo</option><option value="party">Drinking & Dares Bingo</option><option value="extreme">⚡ Extreme Bingo</option></select>
         <label for="cardCount">Cards for each player</label><select id="cardCount"><option value="1">1 card</option><option value="2">2 cards</option><option value="3">3 cards</option><option value="4">4 cards</option><option value="5">5 cards</option><option value="6">6 cards</option></select>
         <div id="partySetup" class="party-setup hidden"><label class="check-row"><input id="adultConfirm" type="checkbox"> Everyone taking part is 18+ and agrees to play responsibly</label><label for="partyActions">Party challenges — one per line</label><textarea id="partyActions" rows="6">Take one sip
 Choose someone to take one sip
@@ -115,5 +115,6 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
   <script type="module" src="share-code.js"></script>
   <script type="module" src="winner-celebration.js"></script>
   <script type="module" src="card-auto.js"></script>
+  <script type="module" src="extreme-mode.js"></script>
 </body>
 </html>
