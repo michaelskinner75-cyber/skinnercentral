@@ -7,7 +7,7 @@ let db=null,roomCode='',roomUnsub=null,currentRoom=null,handledFinish='',startin
 
 const style=document.createElement('style');
 style.textContent=`
-#rematchModal{z-index:12000!important}.rematch-card{width:min(390px,100%);padding:26px;border-radius:26px;text-align:center}.rematch-card h2{margin:8px 0}.rematch-card p{color:var(--muted);line-height:1.45}.rematch-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.rematch-panel{margin:0 0 12px;padding:11px 13px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}.rematch-panel span{font-size:.8rem;color:var(--muted)}.rematch-panel strong{color:var(--gold2)}@media(max-width:500px){.rematch-actions{grid-template-columns:1fr}.rematch-card{padding:22px 18px}}
+#rematchModal{z-index:120000!important}.rematch-card{width:min(390px,100%);padding:26px;border-radius:26px;text-align:center}.rematch-card h2{margin:8px 0}.rematch-card p{color:var(--muted);line-height:1.45}.rematch-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.rematch-panel{margin:0 0 12px;padding:11px 13px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}.rematch-panel span{font-size:.8rem;color:var(--muted)}.rematch-panel strong{color:var(--gold2)}@media(max-width:500px){.rematch-actions{grid-template-columns:1fr}.rematch-card{padding:22px 18px}}
 `;
 document.head.appendChild(style);
 
@@ -24,18 +24,22 @@ panel.innerHTML=`<div><strong>Ready for another game</strong><br><span id="remat
 $('gameView')?.insertBefore(panel,$('gameView').firstChild);
 
 function getDisplayedWinner(){
-  const text=[$('modalMessage')?.textContent,$('finishedText')?.textContent,$('announcement')?.textContent].filter(Boolean).join(' ');
-  const match=text.match(/(?:Congratulations\s+)?(.+?)\s+(?:has won|won the Full House|— Full House)/i);
-  return match?.[1]?.trim()||currentRoom?.finished?.winnerName||'The winner';
+  return currentRoom?.finished?.winnerName||'The winner';
 }
 
-function showRematch(force=false){
-  const finished=currentRoom?.phase==='finished'||!$('finishedBanner')?.classList.contains('hidden');
-  if(!finished&&!force)return;
+function finishKey(room=currentRoom){
+  return String(room?.finished?.id||room?.finished?.finishedAt||'');
+}
+
+function showRematch(){
+  if(currentRoom?.phase!=='finished'||!currentRoom?.finished)return;
+  const id=myId();
+  if(currentRoom.rematchReady?.[id])return;
   $('modal')?.classList.add('hidden');
   $('claimModal')?.classList.add('hidden');
   $('rematchTitle').textContent=`${getDisplayedWinner()} won the Full House!`;
   $('rematchMessage').textContent='Would you like to play another game with the same players?';
+  if(modal.parentElement!==document.body)document.body.appendChild(modal);
   modal.classList.remove('hidden');
 }
 
@@ -54,14 +58,14 @@ function updateReady(room){
         const btn=$('newRoundBtn');
         if(btn){btn.disabled=false;btn.click();}
         starting=false;
-      },250);
+      },300);
     });
   }
 }
 
 async function chooseYes(){
   const id=myId();
-  if(!db||!roomCode||!id)return;
+  if(!db||!roomCode||!id||currentRoom?.phase!=='finished')return;
   await update(ref(db,`rooms/${roomCode}`),{[`rematchReady/${id}`]:true});
   modal.classList.add('hidden');
   panel.classList.remove('hidden');
@@ -89,6 +93,22 @@ function detectRoomCode(){
   return candidates.find(code=>/^\d{4}$/.test((code||'').trim()))?.trim()||'';
 }
 
+function processRoom(room){
+  currentRoom=room;
+  updateReady(room);
+  if(room.phase!=='finished'||!room.finished){
+    handledFinish='';
+    modal.classList.add('hidden');
+    panel.classList.add('hidden');
+    return;
+  }
+  const key=finishKey(room);
+  if(key&&key!==handledFinish){
+    handledFinish=key;
+    setTimeout(showRematch,700);
+  }
+}
+
 function connect(){
   const code=detectRoomCode();
   if(!code||code===roomCode||!getApps().length)return;
@@ -96,29 +116,22 @@ function connect(){
   db=getDatabase(getApps()[0]);
   roomUnsub?.();
   roomUnsub=onValue(ref(db,`rooms/${roomCode}`),snap=>{
-    if(!snap.exists())return;
-    currentRoom=snap.val();
-    updateReady(currentRoom);
-    if(currentRoom.phase==='playing'){
-      handledFinish='';
-      modal.classList.add('hidden');
-      panel.classList.add('hidden');
-    }
-    const finishId=currentRoom.finished?.id||`${currentRoom.finished?.finishedAt||''}`;
-    if(currentRoom.phase==='finished'&&finishId!==handledFinish){
-      handledFinish=finishId;
-      setTimeout(()=>showRematch(true),600);
-    }
+    if(snap.exists())processRoom(snap.val());
   });
 }
 
 function fallbackCheck(){
   connect();
-  const finishedVisible=$('finishedBanner')&&!$('finishedBanner').classList.contains('hidden');
-  if(finishedVisible&&modal.classList.contains('hidden')&&!panel.classList.contains('hidden'))return;
-  if(finishedVisible&&modal.classList.contains('hidden')&&!currentRoom?.rematchReady?.[myId()])showRematch(true);
+  if(!currentRoom)return;
+  if(currentRoom.phase!=='finished'||!currentRoom.finished){
+    handledFinish='';
+    return;
+  }
+  const id=myId();
+  const alreadyReady=!!currentRoom.rematchReady?.[id];
+  if(!alreadyReady&&modal.classList.contains('hidden'))showRematch();
 }
 
 new MutationObserver(()=>setTimeout(fallbackCheck,50)).observe(document.body,{subtree:true,childList:true,attributes:true,characterData:true});
-setInterval(fallbackCheck,500);
+setInterval(fallbackCheck,350);
 connect();
