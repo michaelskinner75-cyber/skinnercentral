@@ -100,19 +100,27 @@
   });
 
   document.addEventListener('click', event => {
-    const tile = event.target.closest?.('.game-tile[data-game="Play Your Cards Right"]');
+    const tile = event.target.closest?.('.game-tile[data-game]');
     if (!tile) return;
+    const name = tile.dataset.game;
+    const routes = {
+      'Play Your Cards Right': 'play-your-cards-right.html',
+      'Reaction Game': 'reaction-game.html'
+    };
+    if (!routes[name]) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     stopImmediately();
-    window.location.href = 'play-your-cards-right.html';
+    window.location.href = routes[name];
   }, true);
 
-  const cardsTile = document.querySelector('.game-tile[data-game="Play Your Cards Right"]');
-  if (cardsTile) {
-    const badge = cardsTile.querySelector('.tile-badge');
+  const liveGames = ['Play Your Cards Right', 'Reaction Game'];
+  liveGames.forEach(name => {
+    const tile = document.querySelector(`.game-tile[data-game="${name}"]`);
+    if (!tile) return;
+    const badge = tile.querySelector('.tile-badge');
     if (badge) badge.textContent = 'Play now';
-  }
+  });
 
   window.addEventListener('pagehide', stopImmediately);
 })();
