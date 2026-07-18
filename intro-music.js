@@ -99,5 +99,20 @@
     if (gameIsActive()) stopImmediately();
   });
 
+  document.addEventListener('click', event => {
+    const tile = event.target.closest?.('.game-tile[data-game="Play Your Cards Right"]');
+    if (!tile) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    stopImmediately();
+    window.location.href = 'play-your-cards-right.html';
+  }, true);
+
+  const cardsTile = document.querySelector('.game-tile[data-game="Play Your Cards Right"]');
+  if (cardsTile) {
+    const badge = cardsTile.querySelector('.tile-badge');
+    if (badge) badge.textContent = 'Play now';
+  }
+
   window.addEventListener('pagehide', stopImmediately);
 })();
