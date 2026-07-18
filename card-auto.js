@@ -4,13 +4,14 @@ let syncing=false;
 
 const style=document.createElement('style');
 style.textContent=`
-.card-auto-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
-.card-auto-copy{display:flex;flex-direction:column;gap:2px}.card-auto-copy strong{font-size:.92rem}.card-auto-copy span{font-size:.72rem;opacity:.72}
-.card-auto-toggle{appearance:none;-webkit-appearance:none;width:54px;height:30px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,.16);flex:0 0 auto}
-.card-auto-toggle::after{content:'';position:absolute;width:24px;height:24px;left:2px;top:2px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);transition:.2s}
-.card-auto-toggle:checked{background:linear-gradient(135deg,#ff4fd8,#7b5cff);box-shadow:0 0 18px rgba(255,79,216,.4)}
-.card-auto-toggle:checked::after{transform:translateX(24px)}
+.card-auto-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 7px;padding:5px 7px;border-radius:9px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);min-height:31px}
+.card-auto-copy{display:flex;align-items:center;min-width:0}.card-auto-copy strong{font-size:.7rem;line-height:1;white-space:nowrap}.card-auto-copy span{display:none}
+.card-auto-toggle{appearance:none;-webkit-appearance:none;width:38px;height:21px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,.14);flex:0 0 auto;margin:0}
+.card-auto-toggle::after{content:'';position:absolute;width:15px;height:15px;left:2px;top:2px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:.2s}
+.card-auto-toggle:checked{background:linear-gradient(135deg,#ff4fd8,#7b5cff);box-shadow:0 0 10px rgba(255,79,216,.3)}
+.card-auto-toggle:checked::after{transform:translateX(17px)}
 .card-auto-toggle:disabled{opacity:.55;cursor:not-allowed}
+.tickets-container.multi-card .card-auto-row{margin:2px 0 5px;padding:4px 6px;min-height:27px}.tickets-container.multi-card .card-auto-copy strong{font-size:.64rem}.tickets-container.many-cards .card-auto-row{background:transparent;border-color:rgba(255,255,255,.06)}
 `;
 document.head.appendChild(style);
 
@@ -23,7 +24,7 @@ function enhanceCards(){
     if(panel.querySelector('.card-auto-row'))return;
     const row=document.createElement('label');
     row.className='card-auto-row';
-    row.innerHTML=`<span class="card-auto-copy"><strong>✨ Auto Mark Numbers</strong><span>Automatically dab called numbers on this card</span></span><input class="card-auto-toggle" type="checkbox" aria-label="Auto mark Card ${index+1}">`;
+    row.innerHTML=`<span class="card-auto-copy"><strong>✨ Auto mark</strong><span>Automatically dab called numbers on this card</span></span><input class="card-auto-toggle" type="checkbox" aria-label="Auto mark Card ${index+1}">`;
     const toggle=row.querySelector('input');
     toggle.checked=enabledCards.has(index);
     toggle.addEventListener('change',()=>{toggle.checked?enabledCards.add(index):enabledCards.delete(index);save();syncAutoMarks();});
