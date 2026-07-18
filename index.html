@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="extras.css" />
   <style>
     .room-share-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}.room-share-actions .btn{min-height:44px;padding:10px 16px}
-    .home-choice{display:grid;gap:10px;margin-top:20px}.home-choice .btn{min-height:58px;font-size:1.05rem}.home-help{margin:14px 0 0;color:var(--muted);font-size:.86rem;line-height:1.45}.new-player-guide{margin-top:14px;padding:16px 18px;border-radius:22px}.new-player-guide h3{margin:0 0 12px;text-align:center}.guide-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.guide-step{text-align:center;padding:10px 6px;border-radius:14px;background:rgba(255,255,255,.05);font-size:.78rem;color:var(--muted)}.guide-step strong{display:grid;place-items:center;width:30px;height:30px;margin:0 auto 7px;border-radius:50%;background:var(--gold);color:#241521;font-size:.9rem}.create-link-note{text-align:center;color:var(--muted);font-size:.8rem;margin:2px 0 0}@media(max-width:500px){.guide-steps{grid-template-columns:1fr}.guide-step{display:flex;align-items:center;gap:10px;text-align:left}.guide-step strong{margin:0;flex:0 0 30px}}
+    .home-choice{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.home-choice .btn{min-height:64px;font-size:1rem}.home-help{margin:13px 0 0;color:var(--muted);font-size:.86rem;line-height:1.45}.home-guide{margin-top:14px;padding:18px;border-radius:22px}.home-guide h3{margin:0 0 5px;text-align:center}.home-guide-intro{text-align:center;color:var(--muted);font-size:.82rem;margin:0 0 14px}.guide-paths{display:grid;grid-template-columns:1fr 1fr;gap:10px}.guide-path{padding:13px;border-radius:16px;background:rgba(255,255,255,.055)}.guide-path h4{margin:0 0 10px;color:var(--gold2);font-size:.93rem}.guide-line{display:flex;align-items:flex-start;gap:9px;margin-top:8px;color:var(--muted);font-size:.78rem;line-height:1.35}.guide-line strong{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:50%;background:var(--gold);color:#241521;font-size:.72rem}.quick-rule{margin:13px 0 0;padding:11px 12px;border-radius:14px;background:rgba(247,200,94,.11);text-align:center;color:var(--gold2);font-size:.8rem;font-weight:800}.create-link-note{text-align:center;color:var(--muted);font-size:.8rem;margin:2px 0 0}@media(max-width:500px){.home-choice,.guide-paths{grid-template-columns:1fr}.home-choice .btn{min-height:56px}.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:21px 16px}.home-guide{padding:15px}.guide-path{padding:12px}}
   </style>
 </head>
 <body>
@@ -20,33 +20,34 @@
     <section id="homeView" class="view active">
       <div class="hero-card glass">
         <div class="neon-ball">90</div>
-        <h2>Ready to play?</h2>
-        <p>Joining a game is easy. You only need your name and the four-digit room code.</p>
+        <h2>Choose what you’re doing</h2>
+        <p>One person creates the room. Everyone else joins using the four-digit code.</p>
         <div class="home-choice">
-          <button id="showJoinBtn" class="btn btn-primary">Join a Game</button>
-          <button id="createGameBtn" class="btn btn-secondary">Create a New Game</button>
+          <button id="createGameBtn" class="btn btn-primary">🎮 Set Up a Game</button>
+          <button id="showJoinBtn" class="btn btn-secondary">🔢 Join With a Code</button>
         </div>
-        <p class="home-help">Most players should choose <strong>Join a Game</strong>. Only one person needs to create the room.</p>
+        <p class="home-help"><strong>Setting up?</strong> Choose the game and number of cards, then share the code. <strong>Joining?</strong> Enter your name and the code you were given.</p>
       </div>
 
       <div id="joinPanel" class="join-panel glass hidden">
-        <h3>Join the game</h3>
-        <label for="joinName">Your name</label>
-        <input id="joinName" maxlength="18" placeholder="Enter your name" autocomplete="nickname" />
-        <label for="roomCodeInput">Four-digit room code</label>
+        <h3>Join someone else’s game</h3>
+        <p class="create-link-note">Ask the person who set up the game for their four-digit room code.</p>
+        <label for="joinName">1. Enter your name</label>
+        <input id="joinName" maxlength="18" placeholder="Your name" autocomplete="nickname" />
+        <label for="roomCodeInput">2. Enter the four-digit code</label>
         <input id="roomCodeInput" maxlength="4" inputmode="numeric" placeholder="1234" />
-        <button id="joinGameBtn" class="btn btn-primary">Join Now</button>
+        <button id="joinGameBtn" class="btn btn-primary">3. Join the Room</button>
         <p id="joinStatus" class="status-text"></p>
       </div>
 
       <div id="createPanel" class="join-panel glass hidden">
-        <h3>Create the game</h3>
-        <p class="create-link-note">Set up the room, then share the code with the other players.</p>
-        <label for="hostName">Your name</label><input id="hostName" maxlength="18" placeholder="Michael" autocomplete="nickname" />
-        <label for="opponentMode">Who is playing?</label><select id="opponentMode"><option value="friends">Friends and family</option><option value="computer">Play against computer</option></select>
+        <h3>Set up a new game</h3>
+        <p class="create-link-note">Choose the settings, create the room, then send the code to everyone playing.</p>
+        <label for="hostName">1. Your name</label><input id="hostName" maxlength="18" placeholder="Michael" autocomplete="nickname" />
+        <label for="opponentMode">2. Who is playing?</label><select id="opponentMode"><option value="friends">Friends and family</option><option value="computer">Play against computer</option></select>
         <div id="computerSetup" class="hidden"><label for="computerCount">Computer opponents</label><select id="computerCount"><option value="1">1 computer</option><option value="2">2 computers</option><option value="3" selected>3 computers</option><option value="4">4 computers</option><option value="5">5 computers</option></select></div>
-        <label for="gameMode">Game type</label><select id="gameMode"><option value="classic">Classic Bingo</option><option value="party">Drinking & Dares Bingo</option></select>
-        <label for="cardCount">Cards for each player</label><select id="cardCount"><option value="1">1 card</option><option value="2">2 cards</option><option value="3">3 cards</option><option value="4">4 cards</option><option value="5">5 cards</option><option value="6">6 cards</option></select>
+        <label for="gameMode">3. Choose the game type</label><select id="gameMode"><option value="classic">Classic Bingo</option><option value="party">Drinking & Dares Bingo</option></select>
+        <label for="cardCount">4. Cards for each player</label><select id="cardCount"><option value="1">1 card</option><option value="2">2 cards</option><option value="3">3 cards</option><option value="4">4 cards</option><option value="5">5 cards</option><option value="6">6 cards</option></select>
         <div id="partySetup" class="party-setup hidden"><label class="check-row"><input id="adultConfirm" type="checkbox"> Everyone taking part is 18+ and agrees to play responsibly</label><label for="partyActions">Party challenges — one per line</label><textarea id="partyActions" rows="6">Take one sip
 Choose someone to take one sip
 Do your best dance move
@@ -55,23 +56,24 @@ Swap seats with another player
 Take a soft-drink shot or one alcoholic shot
 Everyone raises a glass
 Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is optional. Players can always choose a soft drink, skip a challenge or stop playing.</p></div>
-        <button id="confirmCreateBtn" class="btn btn-primary">Create Room</button><p id="createStatus" class="status-text"></p>
+        <button id="confirmCreateBtn" class="btn btn-primary">5. Create Room & Get Code</button><p id="createStatus" class="status-text"></p>
       </div>
 
-      <div class="new-player-guide glass">
-        <h3>How to join</h3>
-        <div class="guide-steps">
-          <div class="guide-step"><strong>1</strong><span>Ask the game creator for the room code.</span></div>
-          <div class="guide-step"><strong>2</strong><span>Enter your name and the four numbers.</span></div>
-          <div class="guide-step"><strong>3</strong><span>Tap Join Now and wait for the game to start.</span></div>
+      <div class="home-guide glass">
+        <h3>How a game works</h3>
+        <p class="home-guide-intro">There is no separate host screen — everyone plays on their own phone or tablet.</p>
+        <div class="guide-paths">
+          <div class="guide-path"><h4>👑 Person setting up</h4><div class="guide-line"><strong>1</strong><span>Tap <b>Set Up a Game</b> and choose the settings.</span></div><div class="guide-line"><strong>2</strong><span>Create the room and share the four-digit code.</span></div><div class="guide-line"><strong>3</strong><span>Wait for everyone to join, then tap <b>Ready / Start</b>.</span></div></div>
+          <div class="guide-path"><h4>🎟 Everyone joining</h4><div class="guide-line"><strong>1</strong><span>Tap <b>Join With a Code</b>.</span></div><div class="guide-line"><strong>2</strong><span>Enter your name and the four-digit code.</span></div><div class="guide-line"><strong>3</strong><span>Wait in the room. Your bingo cards appear when the game starts.</span></div></div>
         </div>
+        <p class="quick-rule">When a called number is on your card, tap it to place a virtual dabber.</p>
       </div>
     </section>
 
     <section id="lobbyView" class="view">
-      <div class="room-card glass"><div class="eyebrow">Room code</div><div id="roomCodeDisplay" class="room-code">----</div><div class="room-share-actions"><button id="copyCodeBtn" class="btn btn-ghost">Copy code</button><button id="shareCodeBtn" class="btn btn-primary">📤 Share game code</button></div></div>
-      <div class="glass panel"><div class="panel-heading"><h2>Players</h2><span id="playerCount">0 players</span></div><div id="modeBadge" class="mode-badge">Classic Bingo</div><div id="cardsBadge" class="mode-badge">1 card each</div><div id="playerList" class="player-list"></div></div>
-      <div class="lobby-actions"><button id="startGameBtn" class="btn btn-primary hidden">Ready / Start</button><p id="waitingMessage" class="status-text">0 players ready</p><button id="leaveLobbyBtn" class="btn btn-ghost">Leave Room</button></div>
+      <div class="room-card glass"><div class="eyebrow">Share this room code</div><div id="roomCodeDisplay" class="room-code">----</div><div class="room-share-actions"><button id="copyCodeBtn" class="btn btn-ghost">Copy code</button><button id="shareCodeBtn" class="btn btn-primary">📤 Share game code</button></div></div>
+      <div class="glass panel"><div class="panel-heading"><h2>Players in the room</h2><span id="playerCount">0 players</span></div><div id="modeBadge" class="mode-badge">Classic Bingo</div><div id="cardsBadge" class="mode-badge">1 card each</div><div id="playerList" class="player-list"></div></div>
+      <div class="lobby-actions"><button id="startGameBtn" class="btn btn-primary hidden">Everyone Joined — Start Game</button><p id="waitingMessage" class="status-text">The person who created the room will start the game.</p><button id="leaveLobbyBtn" class="btn btn-ghost">Leave Room</button></div>
     </section>
 
     <section id="gameView" class="view">
