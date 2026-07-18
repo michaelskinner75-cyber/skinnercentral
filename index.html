@@ -10,6 +10,7 @@
   <style>
     .room-share-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}.room-share-actions .btn{min-height:44px;padding:10px 16px}
     .start-playing-btn{width:100%;min-height:66px;margin-top:20px;font-size:1.15rem}.simple-choice{margin-top:14px;padding:18px;border-radius:22px;text-align:center}.simple-choice h3{margin:0 0 6px}.simple-choice p{margin:0 0 14px;color:var(--muted);font-size:.86rem}.home-choice{display:grid;gap:10px}.home-choice .btn{min-height:60px;font-size:1rem}.back-home-btn{margin-top:10px;width:100%}.create-link-note{text-align:center;color:var(--muted);font-size:.8rem;margin:2px 0 0}.quick-help{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(247,200,94,.1);color:var(--gold2);text-align:center;font-size:.8rem;line-height:1.4}
+    .return-home-visible{width:100%;margin:0 0 10px;min-height:44px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.07)}
     @media(max-width:500px){.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:22px 16px}.start-playing-btn{min-height:60px}.simple-choice{padding:15px}}
   </style>
 </head>
@@ -73,12 +74,14 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
     </section>
 
     <section id="lobbyView" class="view">
+      <button class="btn btn-ghost return-home-visible" type="button" onclick="document.getElementById('leaveLobbyBtn').click()">🏠 Return to Home</button>
       <div class="room-card glass"><div class="eyebrow">Share this room code</div><div id="roomCodeDisplay" class="room-code">----</div><div class="room-share-actions"><button id="copyCodeBtn" class="btn btn-ghost">Copy code</button><button id="shareCodeBtn" class="btn btn-primary">📤 Share game code</button></div></div>
       <div class="glass panel"><div class="panel-heading"><h2>Players in the room</h2><span id="playerCount">0 players</span></div><div id="modeBadge" class="mode-badge">Classic Bingo</div><div id="cardsBadge" class="mode-badge">1 card each</div><div id="playerList" class="player-list"></div></div>
       <div class="lobby-actions"><button id="startGameBtn" class="btn btn-primary hidden">Everyone Joined — Start Game</button><p id="waitingMessage" class="status-text">The person who created the room will start the game.</p><button id="leaveLobbyBtn" class="btn btn-ghost">Leave Room</button></div>
     </section>
 
     <section id="gameView" class="view">
+      <button class="btn btn-ghost return-home-visible" type="button" onclick="document.getElementById('leaveLobbyBtn').click()">🏠 Return to Home</button>
       <div class="wallet-bar glass"><div><span>Playing as</span><b id="playerNameDisplay">Player</b></div><div><span>Mode</span><b id="gameModeLabel">Classic</b></div></div>
       <div id="finishedBanner" class="finished-banner glass hidden"><div>🏆</div><strong id="finishedText">Game finished</strong></div>
       <div class="game-topline"><div class="glass current-ball-wrap"><div class="eyebrow">Current ball</div><div id="currentBall" class="current-ball">—</div></div><div class="glass game-meta"><div><span>Room</span><b id="gameRoomCode">----</b></div><div><span>Called</span><b id="calledCount">0 / 90</b></div></div></div>
@@ -117,6 +120,5 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
   <script type="module" src="card-auto.js"></script>
   <script type="module" src="round-rules.js"></script>
   <script type="module" src="extreme-mode.js"></script>
-  <script type="module" src="home-button.js"></script>
 </body>
 </html>
