@@ -1,3 +1,5 @@
+import './round-rules.js';
+
 const $=id=>document.getElementById(id);
 const enabledCards=new Set(JSON.parse(localStorage.getItem('skinnersAutoCards')||'[]'));
 let syncing=false;
