@@ -105,7 +105,8 @@
     const name = tile.dataset.game;
     const routes = {
       'Play Your Cards Right': 'play-your-cards-right.html',
-      'Reaction Game': 'reaction-game.html'
+      'Reaction Game': 'reaction-game.html',
+      'Deal or No Deal': 'deal-or-no-deal.html'
     };
     if (!routes[name]) return;
     event.preventDefault();
@@ -114,7 +115,7 @@
     window.location.href = routes[name];
   }, true);
 
-  const liveGames = ['Play Your Cards Right', 'Reaction Game'];
+  const liveGames = ['Play Your Cards Right', 'Reaction Game', 'Deal or No Deal'];
   liveGames.forEach(name => {
     const tile = document.querySelector(`.game-tile[data-game="${name}"]`);
     if (!tile) return;
