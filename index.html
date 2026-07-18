@@ -4,28 +4,42 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#120b16" />
-  <title>Skinners Bar Bingo</title>
+  <title>Skinners Bar Games</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="extras.css" />
   <style>
     .room-share-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}.room-share-actions .btn{min-height:44px;padding:10px 16px}
     .start-playing-btn{width:100%;min-height:66px;margin-top:20px;font-size:1.15rem}.simple-choice{margin-top:14px;padding:18px;border-radius:22px;text-align:center}.simple-choice h3{margin:0 0 6px}.simple-choice p{margin:0 0 14px;color:var(--muted);font-size:.86rem}.home-choice{display:grid;gap:10px}.home-choice .btn{min-height:60px;font-size:1rem}.back-home-btn{margin-top:10px;width:100%}.create-link-note{text-align:center;color:var(--muted);font-size:.8rem;margin:2px 0 0}.quick-help{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(247,200,94,.1);color:var(--gold2);text-align:center;font-size:.8rem;line-height:1.4}
     .header-actions{margin-left:auto;display:flex;align-items:center;gap:7px}.header-home-btn{display:none;min-width:44px;min-height:40px;padding:7px 10px;border-radius:12px;font-size:.72rem;font-weight:900;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);color:#fff}.header-home-btn.visible{display:inline-flex;align-items:center;justify-content:center}.return-home-visible{width:100%;margin:0 0 10px;min-height:44px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.07)}
-    @media(max-width:500px){.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:22px 16px}.start-playing-btn{min-height:60px}.simple-choice{padding:15px}.header-home-btn{font-size:0;width:42px;padding:6px}.header-home-btn::after{content:'🏠';font-size:1.05rem}}
+    .games-section{margin-top:16px;padding:18px;border-radius:24px}.games-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:13px}.games-section-heading h2{margin:0;font-size:1.15rem}.games-section-heading span{color:var(--muted);font-size:.75rem}.games-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.game-tile{position:relative;min-height:118px;padding:15px;border-radius:19px;border:1px solid rgba(255,255,255,.11);background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.035));color:var(--text);text-align:left;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;overflow:hidden}.game-tile:hover{border-color:rgba(247,200,94,.55);transform:translateY(-1px)}.game-tile-icon{font-size:2rem;margin-bottom:auto}.game-tile strong{font-size:.95rem}.game-tile small{margin-top:4px;color:var(--muted);line-height:1.25}.game-tile.primary-game{grid-column:1/-1;min-height:145px;background:linear-gradient(135deg,rgba(247,200,94,.28),rgba(255,74,162,.16));border-color:rgba(247,200,94,.42)}.game-tile.primary-game strong{font-size:1.2rem}.tile-badge{position:absolute;top:10px;right:10px;padding:5px 8px;border-radius:999px;background:rgba(0,0,0,.28);color:var(--gold2);font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.tile-badge.custom{background:rgba(92,225,161,.15);color:var(--success)}
+    @media(max-width:500px){.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:22px 16px}.start-playing-btn{min-height:60px}.simple-choice{padding:15px}.header-home-btn{font-size:0;width:42px;padding:6px}.header-home-btn::after{content:'🏠';font-size:1.05rem}.games-grid{grid-template-columns:1fr}.game-tile.primary-game{grid-column:auto}.game-tile{min-height:105px}}
   </style>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <main class="app-shell">
-    <header class="brand-bar"><div class="brand-mark">SB</div><div><div class="eyebrow">Welcome to</div><h1>Skinners Bar Bingo</h1></div><div class="header-actions"><button id="headerHomeBtn" class="header-home-btn" type="button" aria-label="Return to home">🏠 Home</button><button id="soundBtn" class="icon-button" aria-label="Toggle sound">🔊</button></div></header>
+    <header class="brand-bar"><div class="brand-mark">SB</div><div><div class="eyebrow">Welcome to</div><h1>Skinners Bar Games</h1></div><div class="header-actions"><button id="headerHomeBtn" class="header-home-btn" type="button" aria-label="Return to home">🏠 Home</button><button id="soundBtn" class="icon-button" aria-label="Toggle sound">🔊</button></div></header>
 
     <section id="homeView" class="view active">
       <div class="hero-card glass">
         <div class="neon-ball">90</div>
-        <h2>Ready to play?</h2>
-        <p>Tap below to start.</p>
-        <button id="startPlayingBtn" class="btn btn-primary start-playing-btn">Start Playing</button>
+        <h2>Skinners Bar Bingo</h2>
+        <p>Start a bingo game for up to six players.</p>
+        <button id="startPlayingBtn" class="btn btn-primary start-playing-btn">Play Bingo</button>
       </div>
+
+      <section class="games-section glass" aria-labelledby="moreGamesTitle">
+        <div class="games-section-heading"><div><div class="eyebrow">Choose a game</div><h2 id="moreGamesTitle">Other games by Skinners Bar</h2></div><span>No accounts or tokens</span></div>
+        <div class="games-grid">
+          <button class="game-tile" data-game="Pub Quiz" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">🧠</span><strong>Pub Quiz</strong><small>Create questions, teams and live scores.</small></button>
+          <button class="game-tile" data-game="Play Your Cards Right" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">🃏</span><strong>Play Your Cards Right</strong><small>Classic higher or lower card game.</small></button>
+          <button class="game-tile" data-game="Reaction Game" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">⚡</span><strong>Reaction Game</strong><small>Wait for GO, then tap as fast as possible.</small></button>
+          <button class="game-tile" data-game="Deal or No Deal" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">💼</span><strong>Deal or No Deal</strong><small>Choose boxes and face the banker.</small></button>
+          <button class="game-tile" data-game="Fruit Machine" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">🎰</span><strong>Fruit Machine</strong><small>Entertainment-only reels, holds and nudges.</small></button>
+          <button class="game-tile" data-game="Race Night" type="button"><span class="tile-badge">Coming soon</span><span class="game-tile-icon">🏇</span><strong>Race Night</strong><small>Choose a horse and watch the race.</small></button>
+          <button class="game-tile" data-game="Wheel of Fortune" type="button"><span class="tile-badge custom">Customisable</span><span class="game-tile-icon">🎡</span><strong>Wheel of Fortune</strong><small>Create your own prizes, names or challenges.</small></button>
+        </div>
+      </section>
 
       <div id="simpleChoice" class="simple-choice glass hidden">
         <h3>What are you doing?</h3>
@@ -34,7 +48,7 @@
           <button id="createGameBtn" class="btn btn-primary">Create a Game</button>
           <button id="showJoinBtn" class="btn btn-secondary">Join a Game</button>
         </div>
-        <button id="backHomeBtn" class="btn btn-ghost back-home-btn">Back</button>
+        <button id="backHomeBtn" class="btn btn-ghost back-home-btn">Back to Games</button>
       </div>
 
       <div id="joinPanel" class="join-panel glass hidden">
@@ -70,7 +84,7 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
         <p id="createStatus" class="status-text"></p>
       </div>
 
-      <div class="quick-help">Create the game, share the four-digit code, then start when everyone has joined.</div>
+      <div class="quick-help">Choose Bingo now, or explore the other Skinners Bar games being added.</div>
     </section>
 
     <section id="lobbyView" class="view">
@@ -98,12 +112,13 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
 
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card glass"><div id="modalEmoji" class="modal-emoji">🎉</div><h2 id="modalTitle">Bingo!</h2><p id="modalMessage"></p><button id="modalCloseBtn" class="btn btn-primary">Continue</button></div></div>
   <div id="claimModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card glass claim-modal-card"><div id="claimEmoji" class="modal-emoji">🎉</div><h2 id="claimTitle">You have a line!</h2><p id="claimMessage">Your card is ready to claim.</p><div class="claim-popup-actions"><button id="claimNowBtn" class="btn btn-primary">Claim now</button><button id="claimLaterBtn" class="btn btn-ghost">Not yet</button></div></div></div>
+  <div id="gamePreviewModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gamePreviewTitle"><div class="modal-card glass"><div id="gamePreviewEmoji" class="modal-emoji">🎮</div><h2 id="gamePreviewTitle">New game</h2><p id="gamePreviewMessage">This game is being prepared.</p><button id="gamePreviewClose" class="btn btn-primary">Back to Games</button></div></div>
   <div id="toast" class="toast hidden"></div>
   <script>
     (()=>{
-      const hero=document.querySelector('.hero-card'),choice=document.getElementById('simpleChoice'),join=document.getElementById('joinPanel'),create=document.getElementById('createPanel'),homeBtn=document.getElementById('headerHomeBtn');
-      const showChoice=()=>{hero.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');choice.classList.remove('hidden');};
-      const showHome=()=>{hero.classList.remove('hidden');choice.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');};
+      const hero=document.querySelector('.hero-card'),games=document.querySelector('.games-section'),choice=document.getElementById('simpleChoice'),join=document.getElementById('joinPanel'),create=document.getElementById('createPanel'),homeBtn=document.getElementById('headerHomeBtn');
+      const showChoice=()=>{hero.classList.add('hidden');games.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');choice.classList.remove('hidden');};
+      const showHome=()=>{hero.classList.remove('hidden');games.classList.remove('hidden');choice.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');};
       const syncHomeButton=()=>{const inRoom=document.getElementById('lobbyView').classList.contains('active')||document.getElementById('gameView').classList.contains('active');homeBtn.classList.toggle('visible',inRoom);};
       document.getElementById('startPlayingBtn').onclick=showChoice;
       document.getElementById('backHomeBtn').onclick=showHome;
@@ -112,6 +127,11 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
       document.getElementById('createGameBtn').addEventListener('click',()=>choice.classList.add('hidden'));
       document.getElementById('showJoinBtn').addEventListener('click',()=>choice.classList.add('hidden'));
       homeBtn.addEventListener('click',()=>document.getElementById('leaveLobbyBtn').click());
+      const preview=document.getElementById('gamePreviewModal'),previewTitle=document.getElementById('gamePreviewTitle'),previewMessage=document.getElementById('gamePreviewMessage'),previewEmoji=document.getElementById('gamePreviewEmoji');
+      const icons={'Pub Quiz':'🧠','Play Your Cards Right':'🃏','Reaction Game':'⚡','Deal or No Deal':'💼','Fruit Machine':'🎰','Race Night':'🏇','Wheel of Fortune':'🎡'};
+      document.querySelectorAll('.game-tile[data-game]').forEach(tile=>tile.addEventListener('click',()=>{const name=tile.dataset.game;previewTitle.textContent=name;previewEmoji.textContent=icons[name]||'🎮';previewMessage.textContent=name==='Wheel of Fortune'?'The customisable wheel is being prepared. You will be able to add your own names, prizes and challenges.':`${name} is now listed in Skinners Bar Games and will be available when its game screen is completed.`;preview.classList.remove('hidden');}));
+      document.getElementById('gamePreviewClose').onclick=()=>preview.classList.add('hidden');
+      preview.addEventListener('click',event=>{if(event.target===preview)preview.classList.add('hidden');});
       new MutationObserver(syncHomeButton).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
       setInterval(syncHomeButton,300);syncHomeButton();
     })();
