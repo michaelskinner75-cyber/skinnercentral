@@ -10,14 +10,14 @@
   <style>
     .room-share-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}.room-share-actions .btn{min-height:44px;padding:10px 16px}
     .start-playing-btn{width:100%;min-height:66px;margin-top:20px;font-size:1.15rem}.simple-choice{margin-top:14px;padding:18px;border-radius:22px;text-align:center}.simple-choice h3{margin:0 0 6px}.simple-choice p{margin:0 0 14px;color:var(--muted);font-size:.86rem}.home-choice{display:grid;gap:10px}.home-choice .btn{min-height:60px;font-size:1rem}.back-home-btn{margin-top:10px;width:100%}.create-link-note{text-align:center;color:var(--muted);font-size:.8rem;margin:2px 0 0}.quick-help{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(247,200,94,.1);color:var(--gold2);text-align:center;font-size:.8rem;line-height:1.4}
-    .return-home-visible{width:100%;margin:0 0 10px;min-height:44px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.07)}
-    @media(max-width:500px){.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:22px 16px}.start-playing-btn{min-height:60px}.simple-choice{padding:15px}}
+    .header-actions{margin-left:auto;display:flex;align-items:center;gap:7px}.header-home-btn{display:none;min-width:44px;min-height:40px;padding:7px 10px;border-radius:12px;font-size:.72rem;font-weight:900;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);color:#fff}.header-home-btn.visible{display:inline-flex;align-items:center;justify-content:center}.return-home-visible{width:100%;margin:0 0 10px;min-height:44px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.07)}
+    @media(max-width:500px){.neon-ball{width:84px;height:84px;font-size:1.8rem;margin-bottom:12px}.hero-card{padding:22px 16px}.start-playing-btn{min-height:60px}.simple-choice{padding:15px}.header-home-btn{font-size:0;width:42px;padding:6px}.header-home-btn::after{content:'🏠';font-size:1.05rem}}
   </style>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <main class="app-shell">
-    <header class="brand-bar"><div class="brand-mark">SB</div><div><div class="eyebrow">Welcome to</div><h1>Skinners Bar Bingo</h1></div><button id="soundBtn" class="icon-button" aria-label="Toggle sound">🔊</button></header>
+    <header class="brand-bar"><div class="brand-mark">SB</div><div><div class="eyebrow">Welcome to</div><h1>Skinners Bar Bingo</h1></div><div class="header-actions"><button id="headerHomeBtn" class="header-home-btn" type="button" aria-label="Return to home">🏠 Home</button><button id="soundBtn" class="icon-button" aria-label="Toggle sound">🔊</button></div></header>
 
     <section id="homeView" class="view active">
       <div class="hero-card glass">
@@ -101,15 +101,19 @@ Complete a dare chosen by the group</textarea><p class="safety-note">Alcohol is 
   <div id="toast" class="toast hidden"></div>
   <script>
     (()=>{
-      const hero=document.querySelector('.hero-card'),choice=document.getElementById('simpleChoice'),join=document.getElementById('joinPanel'),create=document.getElementById('createPanel');
+      const hero=document.querySelector('.hero-card'),choice=document.getElementById('simpleChoice'),join=document.getElementById('joinPanel'),create=document.getElementById('createPanel'),homeBtn=document.getElementById('headerHomeBtn');
       const showChoice=()=>{hero.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');choice.classList.remove('hidden');};
       const showHome=()=>{hero.classList.remove('hidden');choice.classList.add('hidden');join.classList.add('hidden');create.classList.add('hidden');};
+      const syncHomeButton=()=>{const inRoom=document.getElementById('lobbyView').classList.contains('active')||document.getElementById('gameView').classList.contains('active');homeBtn.classList.toggle('visible',inRoom);};
       document.getElementById('startPlayingBtn').onclick=showChoice;
       document.getElementById('backHomeBtn').onclick=showHome;
       document.getElementById('joinBackBtn').onclick=showChoice;
       document.getElementById('createBackBtn').onclick=showChoice;
       document.getElementById('createGameBtn').addEventListener('click',()=>choice.classList.add('hidden'));
       document.getElementById('showJoinBtn').addEventListener('click',()=>choice.classList.add('hidden'));
+      homeBtn.addEventListener('click',()=>document.getElementById('leaveLobbyBtn').click());
+      new MutationObserver(syncHomeButton).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+      setInterval(syncHomeButton,300);syncHomeButton();
     })();
   </script>
   <script src="intro-music.js"></script>
