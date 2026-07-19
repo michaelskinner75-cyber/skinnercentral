@@ -22,10 +22,9 @@
   soundButton?.addEventListener('click',()=>{enabled=!enabled;audio.muted=!enabled;if(!enabled||gameIsActive())stopImmediately();else beginIntroMusic()});
   if(gameView)new MutationObserver(()=>{if(gameView.classList.contains('active')){gameplayStarted=true;stopImmediately()}}).observe(gameView,{attributes:true,attributeFilter:['class']});
   audio.addEventListener('play',()=>{if(gameIsActive())stopImmediately()});
-
   const routes={
-    'Pub Quiz':'pub-quiz.html','Play Your Cards Right':'play-your-cards-right.html','Reaction Game':'reaction-game.html',
-    'Deal or No Deal':'deal-or-no-deal.html','Fruit Machine':'fruit-machine.html','Race Night':'race-night.html',
+    'Pub Quiz':'pub-quiz-v2.html','Play Your Cards Right':'play-your-cards-right.html','Reaction Game':'reaction-game.html',
+    'Deal or No Deal':'deal-or-no-deal.html','Fruit Machine':'fruit-machine.html','Race Night':'horse-race.html',
     'Wheel of Fortune':'wheel-of-fortune.html','Blackjack':'blackjack.html','Solitaire':'solitaire.html','Poker':'poker.html'
   };
   const details={
