@@ -106,7 +106,8 @@
     const routes = {
       'Play Your Cards Right': 'play-your-cards-right.html',
       'Reaction Game': 'reaction-game.html',
-      'Deal or No Deal': 'deal-or-no-deal.html'
+      'Deal or No Deal': 'deal-or-no-deal.html',
+      'Fruit Machine': 'fruit-machine.html'
     };
     if (!routes[name]) return;
     event.preventDefault();
@@ -115,7 +116,7 @@
     window.location.href = routes[name];
   }, true);
 
-  const liveGames = ['Play Your Cards Right', 'Reaction Game', 'Deal or No Deal'];
+  const liveGames = ['Play Your Cards Right', 'Reaction Game', 'Deal or No Deal', 'Fruit Machine'];
   liveGames.forEach(name => {
     const tile = document.querySelector(`.game-tile[data-game="${name}"]`);
     if (!tile) return;
