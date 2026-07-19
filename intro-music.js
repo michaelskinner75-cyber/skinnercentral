@@ -99,19 +99,41 @@
     if (gameIsActive()) stopImmediately();
   });
 
+  const routes = {
+    'Pub Quiz': 'pub-quiz.html',
+    'Play Your Cards Right': 'play-your-cards-right.html',
+    'Reaction Game': 'reaction-game.html',
+    'Deal or No Deal': 'deal-or-no-deal.html',
+    'Fruit Machine': 'fruit-machine.html',
+    'Race Night': 'race-night.html',
+    'Wheel of Fortune': 'wheel-of-fortune.html',
+    'Blackjack': 'blackjack.html',
+    'Solitaire': 'solitaire.html',
+    'Poker': 'poker.html'
+  };
+
+  const grid = document.querySelector('.games-grid');
+  if (grid) {
+    const additions = [
+      ['Blackjack', '🂡', 'Multiplayer', 'Up to six players against the dealer.'],
+      ['Solitaire', '♠️', 'Single player', 'Classic Klondike card game.'],
+      ['Poker', '♣️', 'Multiplayer', 'Texas Hold’em for up to six players.']
+    ];
+    additions.forEach(([name, icon, badge, text]) => {
+      if (grid.querySelector(`[data-game="${name}"]`)) return;
+      const tile = document.createElement('button');
+      tile.className = 'game-tile';
+      tile.type = 'button';
+      tile.dataset.game = name;
+      tile.innerHTML = `<span class="tile-badge">${badge}</span><span class="game-tile-icon">${icon}</span><strong>${name}</strong><small>${text}</small>`;
+      grid.appendChild(tile);
+    });
+  }
+
   document.addEventListener('click', event => {
     const tile = event.target.closest?.('.game-tile[data-game]');
     if (!tile) return;
     const name = tile.dataset.game;
-    const routes = {
-      'Pub Quiz': 'pub-quiz.html',
-      'Play Your Cards Right': 'play-your-cards-right.html',
-      'Reaction Game': 'reaction-game.html',
-      'Deal or No Deal': 'deal-or-no-deal.html',
-      'Fruit Machine': 'fruit-machine.html',
-      'Race Night': 'race-night.html',
-      'Wheel of Fortune': 'wheel-of-fortune.html'
-    };
     if (!routes[name]) return;
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -119,12 +141,11 @@
     window.location.href = routes[name];
   }, true);
 
-  const liveGames = ['Pub Quiz', 'Play Your Cards Right', 'Reaction Game', 'Deal or No Deal', 'Fruit Machine', 'Race Night', 'Wheel of Fortune'];
-  liveGames.forEach(name => {
+  Object.keys(routes).forEach(name => {
     const tile = document.querySelector(`.game-tile[data-game="${name}"]`);
     if (!tile) return;
     const badge = tile.querySelector('.tile-badge');
-    if (badge) badge.textContent = 'Play now';
+    if (badge) badge.textContent = badge.textContent === 'Multiplayer' || badge.textContent === 'Single player' ? badge.textContent : 'Play now';
   });
 
   window.addEventListener('pagehide', stopImmediately);
