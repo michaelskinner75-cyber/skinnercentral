@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#041623">
+<title>Skinners Bar Battleships</title>
+<link rel="stylesheet" href="battleships.css">
+</head>
+<body>
+<main class="app">
+<header class="top"><div><small>SKINNERS BAR GAMES</small><h1>⚓ Battleships</h1></div><a href="index.html" class="home">🏠 Home</a></header>
+<section id="setup" class="panel setup">
+<div class="hero-icon">🚢</div><h2>Choose how to play</h2><p>Find and sink every enemy ship before yours are destroyed.</p>
+<input id="name" maxlength="18" placeholder="Your name" autocomplete="nickname">
+<button id="single" class="btn primary">🤖 Single Player</button>
+<div class="divider">or multiplayer</div>
+<button id="create" class="btn">Create Multiplayer Game</button>
+<div class="join-row"><input id="codeInput" maxlength="4" inputmode="numeric" placeholder="Room code"><button id="join" class="btn">Join</button></div>
+<p id="setupStatus" class="status"></p>
+</section>
+<section id="lobby" class="panel hidden"><small id="roomLabel">ROOM CODE</small><div id="roomCode" class="room-code">----</div><p id="lobbyText">Waiting for another captain…</p><div id="playersList" class="players-list"></div><button id="copyCode" class="btn">Copy Code</button></section>
+<section id="game" class="hidden">
+<div class="hud panel"><div><small>STATUS</small><strong id="turnText">Preparing battle…</strong></div><div><small>ROOM</small><strong id="hudRoom">SOLO</strong></div></div>
+<div id="message" class="message">Select an enemy square to fire.</div>
+<section class="battle-layout">
+<div class="board-card enemy-card"><div class="board-head"><div><small>ENEMY WATERS</small><h2 id="enemyName">Enemy Fleet</h2></div><span id="enemyShips">5 ships</span></div><div id="enemyBoard" class="board enemy-board" aria-label="Enemy board"></div></div>
+<div class="board-card"><div class="board-head"><div><small>YOUR WATERS</small><h2 id="myName">Your Fleet</h2></div><span id="myShips">5 ships</span></div><div id="myBoard" class="board own-board" aria-label="Your board"></div></div>
+</section>
+<div class="legend panel"><span><i class="ship-dot"></i> Ship</span><span><i class="miss-dot"></i> Miss</span><span><i class="hit-dot"></i> Hit</span></div>
+<div id="winner" class="winner hidden"><div>🏆</div><h2 id="winnerTitle">Victory!</h2><p id="winnerText"></p><button id="playAgain" class="btn primary">Play Again</button></div>
+</section>
+<footer>Created and developed by <strong>Michael Skinner</strong></footer>
+</main>
+<script src="battleships.js"></script>
+</body>
+</html>
