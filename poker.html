@@ -18,6 +18,13 @@
 <p class="note">Virtual chips only. No real-money deposits, withdrawals or prizes.</p>
 </div>
 <script src="poker-pro.js"></script>
+<script>
+const multiplayerStyle=document.getElementById('playStyle');
+if(multiplayerStyle){
+  multiplayerStyle.value=localStorage.getItem('pokerLayout')||'full-table';
+  multiplayerStyle.addEventListener('change',()=>localStorage.setItem('pokerLayout',multiplayerStyle.value));
+}
+</script>
 <script src="poker-room-mode.js"></script>
 </body>
 </html>
