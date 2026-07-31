@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#041623">
 <title>Skinners Bar Battleships</title>
-<link rel="stylesheet" href="battleships.css?v=20260731-4">
+<link rel="stylesheet" href="battleships.css?v=20260731-5">
 </head>
 <body>
 <main class="app">
@@ -24,9 +24,16 @@
 <div class="hud panel"><div><small>STATUS</small><strong id="turnText">Preparing fleet…</strong></div><div><small>ROOM</small><strong id="hudRoom">SOLO</strong></div></div>
 <div id="message" class="message">Tap a ship to select it.</div>
 <div id="placementTools" class="placement-tools panel hidden">
-<button id="rotateShip" class="btn">↻ Rotate selected ship</button>
-<button id="randomiseShips" class="btn">🔀 Randomise fleet</button>
-<button id="readyShips" class="btn primary">✅ Ready for battle</button>
+<div class="ship-controller" aria-label="Ship positioning controls">
+<button id="moveUp" class="ship-control arrow" type="button" aria-label="Move ship up">▲</button>
+<button id="moveLeft" class="ship-control arrow" type="button" aria-label="Move ship left">◀</button>
+<button id="confirmShip" class="ship-control confirm" type="button" aria-label="Set ship position">OK</button>
+<button id="moveRight" class="ship-control arrow" type="button" aria-label="Move ship right">▶</button>
+<button id="moveDown" class="ship-control arrow" type="button" aria-label="Move ship down">▼</button>
+</div>
+<button id="rotateShip" class="btn rotate-control" type="button">↻ Rotate ship</button>
+<button id="randomiseShips" class="btn" type="button">🔀 Randomise fleet</button>
+<button id="readyShips" class="btn primary" type="button">✅ Ready for battle</button>
 </div>
 <section class="single-board-wrap">
 <div class="board-card">
@@ -38,9 +45,9 @@
 <div class="legend panel"><span><i class="ship-dot"></i> Ship</span><span><i class="miss-dot"></i> Miss</span><span><i class="hit-dot"></i> Hit</span><span><i class="sunk-dot"></i> Sunk</span></div>
 <div id="winner" class="winner hidden"><div>🏆</div><h2 id="winnerTitle">Victory!</h2><p id="winnerText"></p><button id="playAgain" class="btn primary">Play Again</button></div>
 </section>
-<footer>Created and developed by <strong>Michael Skinner</strong> · Version 4</footer>
+<footer>Created and developed by <strong>Michael Skinner</strong> · Version 5</footer>
 </main>
-<script src="battleships.js?v=20260731-4"></script>
-<script src="battleships-simple-move.js?v=20260731-4"></script>
+<script src="battleships.js?v=20260731-5"></script>
+<script src="battleships-simple-move.js?v=20260731-5"></script>
 </body>
 </html>
