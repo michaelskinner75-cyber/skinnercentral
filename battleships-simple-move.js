@@ -1,97 +1,129 @@
 (()=>{
   const confirmedShips=new Set();
   const originalRender=render;
+  const originalBuildBoard=buildBoard;
   const originalRandomise=randomise;
+  const originalReadyFleet=readyFleet;
 
-  function placementActive(){
-    const me=state.players?.[myKey];
-    return state.phase==='placement'&&me&&!me.ready;
+  const me=()=>state.players&&state.players[myKey];
+  const placementActive=()=>state.phase==='placement'&&me()&&!me().ready;
+  const currentShip=()=>me()?.board?.ships?.[selectedShip]||null;
+
+  function showPlacementMessage(text){
+    const message=$('message');
+    if(message)message.textContent=text;
   }
 
-  function selected(){
-    return state.players?.[myKey]?.board?.ships?.[selectedShip]||null;
-  }
-
-  function moveBy(rowDelta,colDelta){
+  function moveBy(rowChange,columnChange){
     if(!placementActive())return;
-    const ship=selected();
+    const ship=currentShip();
     if(!ship)return;
 
-    const start=ship.cells[0];
-    const row=Math.floor(start/size)+rowDelta;
-    const col=(start%size)+colDelta;
-    const endRow=row+(ship.horizontal?0:ship.cells.length-1);
-    const endCol=col+(ship.horizontal?ship.cells.length-1:0);
+    const firstCell=Math.min(...ship.cells);
+    const row=Math.floor(firstCell/size)+rowChange;
+    const column=(firstCell%size)+columnChange;
+    const lastRow=row+(ship.horizontal?0:ship.cells.length-1);
+    const lastColumn=column+(ship.horizontal?ship.cells.length-1:0);
 
-    if(row<0||col<0||endRow>=size||endCol>=size){
-      flash('That ship cannot move any further.');
+    if(row<0||column<0||lastRow>=size||lastColumn>=size){
+      showPlacementMessage('That ship cannot move any further.');
+      return;
+    }
+
+    const start=row*size+column;
+    const cells=candidateCells(start,ship.cells.length,ship.horizontal);
+    const blocked=me().board.ships.some((other,index)=>
+      index!==selectedShip&&other.cells.some(cell=>cells.includes(cell))
+    );
+
+    if(blocked){
+      showPlacementMessage('Ships cannot overlap.');
       return;
     }
 
     confirmedShips.delete(selectedShip);
-    moveSelected(row*size+col);
-  }
-
-  function confirmSelected(){
-    if(!placementActive())return;
-    confirmedShips.add(selectedShip);
-
-    const shipCount=state.players[myKey].board.ships.length;
-    const next=Array.from({length:shipCount},(_,i)=>i).find(i=>!confirmedShips.has(i));
-
-    if(next===undefined){
-      $('message').textContent='All ships are set. Press Ready for battle.';
-    }else{
-      selectedShip=next;
-      $('message').textContent=`Ship set. Now position ${shipNames[selectedShip]}.`;
-    }
+    ship.cells=cells;
+    ship.hits=[];
+    me().board.shots=[];
+    savePlacement();
     render();
   }
 
-  async function rotateWithReset(){
+  function rotateShip(){
     if(!placementActive())return;
+    const ship=currentShip();
+    if(!ship)return;
+
+    const firstCell=Math.min(...ship.cells);
+    const cells=candidateCells(firstCell,ship.cells.length,!ship.horizontal);
+    if(!cells){
+      showPlacementMessage('There is not enough room to rotate here. Move the ship first.');
+      return;
+    }
+
+    const blocked=me().board.ships.some((other,index)=>
+      index!==selectedShip&&other.cells.some(cell=>cells.includes(cell))
+    );
+    if(blocked){
+      showPlacementMessage('The ship cannot rotate because another ship is in the way.');
+      return;
+    }
+
     confirmedShips.delete(selectedShip);
-    await rotateSelected();
+    ship.horizontal=!ship.horizontal;
+    ship.cells=cells;
+    ship.hits=[];
+    savePlacement();
+    render();
   }
 
-  async function randomiseWithReset(){
+  function confirmShip(){
+    if(!placementActive())return;
+    confirmedShips.add(selectedShip);
+
+    const count=me().board.ships.length;
+    let next=-1;
+    for(let index=0;index<count;index++){
+      if(!confirmedShips.has(index)){
+        next=index;
+        break;
+      }
+    }
+
+    if(next>=0)selectedShip=next;
+    render();
+  }
+
+  function randomiseFleet(){
     confirmedShips.clear();
-    await originalRandomise();
+    originalRandomise();
+  }
+
+  function startBattle(){
+    if(confirmedShips.size!==fleet.length){
+      showPlacementMessage('Press OK on every ship before starting the battle.');
+      return;
+    }
+    originalReadyFleet();
   }
 
   buildBoard=function(board,view){
-    const el=$('mainBoard');
-    el.innerHTML='';
-    el.classList.toggle('targeting',view==='enemy'&&state.phase==='playing'&&state.turn===myKey);
+    originalBuildBoard(board,view);
+    if(view!=='own'||!placementActive())return;
 
-    for(let i=0;i<size*size;i++){
-      const b=document.createElement('button');
-      b.className='cell';
-      b.type='button';
-
-      const shot=board.shots.includes(i);
-      const shipIndex=shipAt(board,i);
-      const ship=shipIndex>=0?board.ships[shipIndex]:null;
-      const sunk=ship&&ship.cells.every(c=>ship.hits.includes(c));
-      const showShip=view==='own'||sunk;
-
-      if(showShip&&ship)b.classList.add('ship');
-      if(view==='own'&&state.phase==='placement'&&shipIndex===selectedShip)b.classList.add('selected');
-      if(view==='own'&&state.phase==='placement'&&shipIndex>=0&&confirmedShips.has(shipIndex))b.classList.add('confirmed');
-      if(shot)b.classList.add('shot',ship?'hit':'miss');
-      if(sunk)b.classList.add('sunk');
-
-      if(placementActive()&&view==='own'&&shipIndex>=0){
-        b.onclick=()=>{
+    const cells=$('mainBoard')?.children||[];
+    Array.from(cells).forEach((button,index)=>{
+      const shipIndex=shipAt(board,index);
+      button.onclick=null;
+      if(shipIndex>=0){
+        if(shipIndex===selectedShip)button.classList.add('selected');
+        if(confirmedShips.has(shipIndex))button.classList.add('confirmed');
+        button.onclick=()=>{
           selectedShip=shipIndex;
           render();
         };
-      }else if(view==='enemy'&&state.phase==='playing'&&state.turn===myKey&&!shot){
-        b.onclick=()=>shoot(i);
       }
-
-      el.appendChild(b);
-    }
+    });
   };
 
   render=function(){
@@ -99,53 +131,59 @@
     const active=placementActive();
     const tools=$('placementTools');
     const ready=$('readyShips');
-    const allSet=confirmedShips.size===fleet.length;
+    const allConfirmed=confirmedShips.size===fleet.length;
 
     if(tools)tools.classList.toggle('hidden',!active);
     if(ready){
-      ready.disabled=!allSet;
-      ready.classList.toggle('placement-ready',allSet);
+      ready.disabled=!allConfirmed;
+      ready.textContent=allConfirmed?'✅ Ready for battle':`Confirm ships (${confirmedShips.size}/${fleet.length})`;
     }
 
     if(active){
-      const name=shipNames[selectedShip]||'ship';
-      const count=confirmedShips.size;
-      $('message').textContent=allSet
+      const shipName=shipNames[selectedShip]||'ship';
+      showPlacementMessage(allConfirmed
         ?'All ships are set. Press Ready for battle.'
-        :`Position ${name} with the arrows, rotate if needed, then press OK. (${count}/${fleet.length} set)`;
+        :`Move ${shipName} with the arrows, rotate if needed, then press OK. (${confirmedShips.size}/${fleet.length} set)`
+      );
     }
   };
 
-  $('moveUp')?.addEventListener('click',()=>moveBy(-1,0));
-  $('moveDown')?.addEventListener('click',()=>moveBy(1,0));
-  $('moveLeft')?.addEventListener('click',()=>moveBy(0,-1));
-  $('moveRight')?.addEventListener('click',()=>moveBy(0,1));
-  $('confirmShip')?.addEventListener('click',confirmSelected);
-  if($('rotateShip'))$('rotateShip').onclick=rotateWithReset;
-  if($('randomiseShips'))$('randomiseShips').onclick=randomiseWithReset;
+  const up=$('moveUp');
+  const down=$('moveDown');
+  const left=$('moveLeft');
+  const right=$('moveRight');
+  const ok=$('confirmShip');
+  const rotate=$('rotateShip');
+  const random=$('randomiseShips');
+  const ready=$('readyShips');
+
+  if(up)up.onclick=()=>moveBy(-1,0);
+  if(down)down.onclick=()=>moveBy(1,0);
+  if(left)left.onclick=()=>moveBy(0,-1);
+  if(right)right.onclick=()=>moveBy(0,1);
+  if(ok)ok.onclick=confirmShip;
+  if(rotate)rotate.onclick=rotateShip;
+  if(random)random.onclick=randomiseFleet;
+  if(ready)ready.onclick=startBattle;
 
   const style=document.createElement('style');
   style.textContent=`
-    .placement-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
-    .placement-tools.hidden{display:none}
-    .ship-controller{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(58px,78px));grid-template-rows:repeat(3,58px);justify-content:center;gap:8px}
-    .ship-control{border:1px solid rgba(255,255,255,.2);border-radius:14px;background:#12364a;color:#fff;font-weight:900;font-size:24px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25);touch-action:manipulation}
+    .placement-tools{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+    .placement-tools.hidden{display:none!important}
+    .ship-controller{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(62px,82px));grid-template-rows:repeat(3,62px);justify-content:center;gap:8px}
+    .ship-control{border:1px solid rgba(255,255,255,.24);border-radius:14px;background:#12364a;color:#fff;font-weight:900;font-size:25px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     .ship-control:active{transform:translateY(2px);box-shadow:none}
     #moveUp{grid-column:2;grid-row:1}
     #moveLeft{grid-column:1;grid-row:2}
-    #confirmShip{grid-column:2;grid-row:2;background:#19a66a;font-size:18px}
+    #confirmShip{grid-column:2;grid-row:2;background:#169d63;font-size:18px}
     #moveRight{grid-column:3;grid-row:2}
     #moveDown{grid-column:2;grid-row:3}
-    .rotate-control{grid-column:1/-1}
-    #readyShips{grid-column:1/-1;opacity:.45}
-    #readyShips.placement-ready{opacity:1;box-shadow:0 0 0 3px rgba(25,166,106,.24)}
+    .rotate-control,#readyShips{grid-column:1/-1}
+    #readyShips:disabled{opacity:.48;cursor:not-allowed}
     .cell.ship{cursor:pointer}
     .cell.ship.selected{outline:3px solid #ffd166;outline-offset:-3px;filter:brightness(1.25)}
-    .cell.ship.confirmed:not(.selected){box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
-    @media(max-width:520px){
-      .placement-tools{grid-template-columns:1fr}
-      .ship-controller{grid-template-columns:repeat(3,minmax(64px,82px));grid-template-rows:repeat(3,62px)}
-    }
+    .cell.ship.confirmed:not(.selected){box-shadow:inset 0 0 0 3px rgba(62,220,139,.8)}
+    @media(max-width:520px){.placement-tools{grid-template-columns:1fr!important}}
   `;
   document.head.appendChild(style);
 })();
