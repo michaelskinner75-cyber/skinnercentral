@@ -99,14 +99,18 @@
     const active=placementActive();
     const tools=$('placementTools');
     const ready=$('readyShips');
+    const allSet=confirmedShips.size===fleet.length;
 
     if(tools)tools.classList.toggle('hidden',!active);
-    if(ready)ready.classList.toggle('placement-ready',confirmedShips.size===fleet.length);
+    if(ready){
+      ready.disabled=!allSet;
+      ready.classList.toggle('placement-ready',allSet);
+    }
 
     if(active){
       const name=shipNames[selectedShip]||'ship';
       const count=confirmedShips.size;
-      $('message').textContent=count===fleet.length
+      $('message').textContent=allSet
         ?'All ships are set. Press Ready for battle.'
         :`Position ${name} with the arrows, rotate if needed, then press OK. (${count}/${fleet.length} set)`;
     }
@@ -133,7 +137,7 @@
     #moveRight{grid-column:3;grid-row:2}
     #moveDown{grid-column:2;grid-row:3}
     .rotate-control{grid-column:1/-1}
-    #readyShips{grid-column:1/-1;opacity:.55}
+    #readyShips{grid-column:1/-1;opacity:.45}
     #readyShips.placement-ready{opacity:1;box-shadow:0 0 0 3px rgba(25,166,106,.24)}
     .cell.ship{cursor:pointer}
     .cell.ship.selected{outline:3px solid #ffd166;outline-offset:-3px;filter:brightness(1.25)}
