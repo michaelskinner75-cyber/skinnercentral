@@ -1,20 +1,7 @@
 (()=>{
-  let desiredLayout=localStorage.getItem('pokerLayout')||'same-room';
-  let layoutPatchKey='',lastTurnVoice='',lastTenSecondKey='';
+  let lastTurnVoice='',lastTenSecondKey='';
 
-  function addSetupChoice(){
-    const setup=$('setup');
-    if(!setup||$('playStyle'))return;
-    const botCount=$('botCount');
-    const wrap=document.createElement('div');
-    wrap.className='play-style-wrap';
-    wrap.innerHTML=`<label for="playStyle">Multiplayer screen style</label><select id="playStyle"><option value="same-room">📱 Same Room — personal cards screen</option><option value="full-table">🟢 Full Table — casino table view</option></select><p class="play-style-note">Same Room is best when everyone is together using their own phone. Each player sees their own cards and controls, with compact live statuses for everyone else.</p>`;
-    botCount.insertAdjacentElement('afterend',wrap);
-    $('playStyle').value=desiredLayout;
-    $('playStyle').addEventListener('change',()=>{desiredLayout=$('playStyle').value;localStorage.setItem('pokerLayout',desiredLayout)});
-  }
-
-  function addSameRoomView(){
+  function addStreamlinedView(){
     const game=$('game'),action=$('actionPanel');
     if(!game||!action||$('sameRoomView'))return;
     const view=document.createElement('div');
@@ -23,7 +10,7 @@
     view.innerHTML=`
       <div class="same-room-top">
         <div class="same-room-pot"><small>Pot</small><strong id="roomPot">0 chips</strong></div>
-        <div class="same-room-stage"><small>Round</small><strong id="roomStage">Pre-flop</strong><div class="room-mode-badge">📱 Same Room</div></div>
+        <div class="same-room-stage"><small>Round</small><strong id="roomStage">Pre-flop</strong><div class="room-mode-badge">♠ Skinners Bar Poker</div></div>
       </div>
       <div class="same-room-message" id="roomMessage">Waiting for the hand to begin…</div>
       <div class="same-room-table">
@@ -44,20 +31,10 @@
     return 'Still in';
   }
 
-  function syncLayoutChoice(){
-    if(!state||state.mode==='single')return;
-    if(host&&state.phase==='lobby'&&!state.layoutMode){
-      const key=`${room}-${desiredLayout}`;
-      if(layoutPatchKey!==key){layoutPatchKey=key;patchRoom({layoutMode:desiredLayout})}
-    }
-  }
-
-  function renderSameRoom(){
+  function renderStreamlined(){
     const game=$('game');
     if(!game||!state||state.phase==='lobby')return;
-    const sameRoom=state.mode==='multiplayer'&&state.layoutMode==='same-room';
-    game.classList.toggle('same-room-mode',sameRoom);
-    if(!sameRoom)return;
+    game.classList.add('same-room-mode');
 
     const ps=players(),me=state.players?.[playerId];
     const active=ps.find(([,p])=>p.seat===state.turnSeat);
@@ -78,7 +55,7 @@
     if(me?.hand?.length){
       const visible=[...me.hand,...(state.community||[])];
       $('roomHand').textContent=visible.length>=5?`You currently have: ${handScore(visible)[2]}`:`Your cards: ${me.hand.join(' ')}`;
-    }
+    }else $('roomHand').textContent='Your cards will appear here';
 
     $('otherPlayerStrip').innerHTML=ps.filter(([pid])=>pid!==playerId).map(([pid,p])=>{
       const isTurn=p.seat===state.turnSeat&&state.phase==='playing';
@@ -90,7 +67,7 @@
   function announceTurn(){
     if(!state||state.phase!=='playing')return;
     const active=players().find(([,p])=>p.seat===state.turnSeat),name=active?.[1]?.name;
-    if(!name)return;
+    if(!name||active?.[1]?.allIn||active?.[1]?.folded)return;
     const key=`${state.handNo}-${state.stage}-${state.turnSeat}-${state.turnStartedAt}`;
     if(lastTurnVoice!==key){
       lastTurnVoice=key;
@@ -103,12 +80,10 @@
   const originalRender=window.render;
   window.render=function(){
     originalRender();
-    syncLayoutChoice();
-    renderSameRoom();
+    renderStreamlined();
     announceTurn();
   };
 
-  addSetupChoice();
-  addSameRoomView();
-  setInterval(()=>{if(state?.phase&&state.phase!=='lobby'){renderSameRoom();announceTurn()}},500);
+  addStreamlinedView();
+  setInterval(()=>{if(state?.phase&&state.phase!=='lobby'){renderStreamlined();announceTurn()}},500);
 })();
