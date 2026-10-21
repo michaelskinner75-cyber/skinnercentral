@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#120b16">
+  <meta name="description" content="Trace your own photos using a transparent image over a live camera view on your phone.">
+  <title>AR Drawing | Skinners Bar Games</title>
+  <style>
+    :root{color-scheme:dark;--bg:#120b16;--panel:#24182c;--line:rgba(255,255,255,.15);--text:#fff8f5;--muted:#c1b3c8;--pink:#ff55ad;--gold:#f7c85e;--green:#8af1ba}
+    *{box-sizing:border-box}
+    html{background:var(--bg);scroll-behavior:smooth}
+    body{margin:0;min-height:100dvh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse 80% 40% at 10% 0%,#482047 0%,transparent 70%),radial-gradient(ellipse 80% 50% at 90% 65%,#281a49 0%,transparent 70%),var(--bg);color:var(--text)}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    a{color:inherit}
+    .shell{max-width:1080px;padding:clamp(14px,3vw,30px);margin:0 auto}
+    .heading{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+    .back{border:1px solid var(--line);text-decoration:none;border-radius:14px;padding:11px 14px;background:#ffffff10;font-size:.86rem;font-weight:750}
+    .title-wrap{flex:1;min-width:200px}
+    .eyebrow{text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:850;font-size:.66rem}
+    h1{font-size:clamp(1.45rem,4vw,2.2rem);margin:2px 0 0;letter-spacing:-.035em}
+    .intro{color:var(--muted);font-size:.9rem;line-height:1.5;margin:0 0 17px}
+    .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(255px,.75fr);gap:18px;align-items:start}
+    .panel{background:linear-gradient(140deg,#ffffff13,#ffffff07);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 14px 40px #0004}
+    .camera-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .camera-top strong{font-size:.97rem}
+    .pill{font-size:.7rem;font-weight:800;background:#ffffff14;border:1px solid var(--line);padding:6px 9px;border-radius:99px;color:var(--muted)}
+    .viewfinder{position:relative;isolation:isolate;overflow:hidden;background:#050508;border:1px solid rgba(255,255,255,.13);border-radius:16px;min-height:320px;height:min(68dvh,650px);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+    .viewfinder.dragging{cursor:grabbing}
+    .viewfinder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+    .image-overlay{position:absolute;z-index:2;top:50%;left:50%;transform-origin:center center;max-width:none;max-height:none;pointer-events:none;user-select:none;-webkit-user-drag:none;will-change:transform}
+    .grid-lines{display:none;position:absolute;inset:0;z-index:3;pointer-events:none;background-image:linear-gradient(to right,transparent calc(33.33% - .5px),#ffffff60 33.33%,transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),#ffffff60 66.66%,transparent calc(66.66% + .5px)),linear-gradient(to bottom,transparent calc(33.33% - .5px),#ffffff60 33.33%,transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),#ffffff60 66.66%,transparent calc(66.66% + .5px))}
+    .grid-lines.on{display:block}
+    .empty-stage{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;background:radial-gradient(circle at center,#362441,transparent 73%);color:#e3d9e7}
+    .empty-stage .symbol{font-size:3rem;display:block;margin-bottom:10px}
+    .empty-stage strong{display:block;font-size:1.06rem;margin-bottom:5px}
+    .empty-stage p{margin:0;color:var(--muted);font-size:.85rem;line-height:1.45}
+    .status{position:absolute;z-index:4;bottom:12px;left:12px;right:12px;pointer-events:none;text-align:center}
+    .status span{display:inline-block;max-width:100%;padding:7px 12px;border-radius:100px;background:#0c0712c9;color:#fff;font-size:.74rem;line-height:1.4}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid #ffffff2a;border-radius:13px;padding:11px 13px;min-height:45px;font-size:.82rem;font-weight:800;background:#ffffff12;color:var(--text);transition:background .15s ease}
+    .btn:hover{background:#ffffff21}
+    .btn-primary{background:linear-gradient(135deg,var(--gold),#f1a55a);border-color:transparent;color:#281324}
+    .btn-primary:hover{background:linear-gradient(135deg,#ffe095,#f1a55a)}
+    .btn-alt{background:#ff55ad25;border-color:#ff55ad66}
+    .btn[aria-pressed="true"]{border-color:var(--gold);background:#f7c85e22;color:var(--gold)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .toolbar .btn{flex:1}
+    .side{display:grid;gap:14px}
+    .panel h2{font-size:1.02rem;margin:0 0 13px}
+    .field{margin:0 0 18px}
+    .field:last-child{margin-bottom:0}
+    .field-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:.86rem;font-weight:750}
+    output{color:var(--gold);font-variant-numeric:tabular-nums}
+    input[type=range]{display:block;appearance:none;-webkit-appearance:none;width:100%;height:8px;border-radius:99px;background:#ffffff35;margin:10px 0;accent-color:var(--pink)}
+    input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;background:var(--gold);width:24px;height:24px;border-radius:50%;border:3px solid #251529;box-shadow:0 2px 9px #0008}
+    input[type=range]::-moz-range-thumb{background:var(--gold);width:19px;height:19px;border-radius:50%;border:3px solid #251529}
+    .mini-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .hint{font-size:.77rem;line-height:1.5;color:var(--muted);margin:10px 0 0}
+    .tips{font-size:.85rem;color:var(--muted);line-height:1.6}
+    .tips p{margin:0 0 10px}
+    .tips p:last-child{margin-bottom:0}
+    .privacy{color:var(--green);font-size:.76rem;margin-top:10px}
+    .alert{font-size:.8rem;line-height:1.45;margin-top:9px;color:#ffdc98;min-height:1.1em}
+    footer{padding:24px;text-align:center;font-size:.76rem;color:var(--muted)}
+    .focus-exit{display:none}
+    @media(max-width:780px){.layout{grid-template-columns:1fr}.viewfinder{height:min(59dvh,570px)}.shell{padding:14px}.heading{margin-bottom:12px}.camera-panel{padding:11px}.side{grid-template-columns:1fr 1fr}.intro{font-size:.82rem}}
+    @media(max-width:550px){.side{grid-template-columns:1fr}.viewfinder{height:min(56dvh,540px);min-height:275px}.btn{padding:10px 10px}.heading{gap:10px}}
+    .focus-mode{overflow:hidden}
+    .focus-mode .shell{max-width:none;margin:0;padding:0}
+    .focus-mode .heading,.focus-mode .intro,.focus-mode .camera-top,.focus-mode .toolbar,.focus-mode .side,.focus-mode footer{display:none}
+    .focus-mode .layout{display:block}
+    .focus-mode .camera-panel{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
+    .focus-mode .viewfinder{height:100dvh;width:100vw;min-height:0;border:0;border-radius:0}
+    .focus-mode .focus-exit{display:block;position:fixed;top:calc(env(safe-area-inset-top) + 12px);right:calc(env(safe-area-inset-right) + 12px);z-index:20;background:#160b21e8;border:1px solid #ffffff77;color:white;border-radius:99px;padding:12px 17px;font-size:.9rem;font-weight:850}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="heading">
+      <a class="back" href="index.html">← Games</a>
+      <div class="title-wrap"><div class="eyebrow">Creative tools</div><h1>✏️ AR Drawing Studio</h1></div>
+      <span class="pill">Phone camera tracing</span>
+    </header>
+    <p class="intro">Place paper under your phone, open the camera and lay a transparent photo over the live view. Look at the screen as you trace what you see onto the paper.</p>
+
+    <div class="layout">
+      <section class="panel camera-panel" aria-label="AR drawing preview">
+        <div class="camera-top"><strong>Live tracing view</strong><span class="pill" id="modeLabel">Upload a photo to begin</span></div>
+        <div class="viewfinder" id="viewfinder" aria-label="Camera view with tracing overlay">
+          <video id="camera" autoplay playsinline muted aria-label="Live camera"></video>
+          <div class="empty-stage" id="emptyStage"><div><span class="symbol">📷</span><strong>Your tracing canvas</strong><p>Choose a photo, then start your camera.<br>Hold your phone above a sheet of paper.</p></div></div>
+          <img id="overlayImage" class="image-overlay" alt="Your uploaded image for tracing" draggable="false" hidden>
+          <div class="grid-lines" id="gridLines" aria-hidden="true"></div>
+          <div class="status" aria-live="polite"><span id="cameraStatus">Your photo stays on this device</span></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-primary" type="button" id="uploadBtn">🖼️ Choose Photo</button>
+          <button class="btn btn-alt" type="button" id="cameraBtn">📷 Start Camera</button>
+          <button class="btn" type="button" id="focusBtn">⛶ Full View</button>
+        </div>
+        <div class="toolbar">
+          <button class="btn" type="button" id="switchBtn" disabled>↻ Flip Camera</button>
+          <button class="btn" type="button" id="stopBtn" disabled>■ Stop Camera</button>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" hidden aria-label="Upload photo to trace">
+        <div class="alert" role="status" id="errorMessage" aria-live="polite"></div>
+      </section>
+
+      <div class="side">
+        <section class="panel">
+          <h2>Adjust your tracing image</h2>
+          <div class="field"><label class="field-head" for="opacity"><span>Transparency</span><output id="opacityValue">55%</output></label><input id="opacity" type="range" min="5" max="100" step="1" value="55"></div>
+          <div class="field"><label class="field-head" for="scale"><span>Image size</span><output id="scaleValue">100%</output></label><input id="scale" type="range" min="25" max="400" step="1" value="100"></div>
+          <div class="field"><label class="field-head" for="rotation"><span>Rotation</span><output id="rotationValue">0°</output></label><input id="rotation" type="range" min="-180" max="180" step="1" value="0"></div>
+          <div class="mini-actions">
+            <button type="button" class="btn" id="lockBtn" aria-pressed="false">🔓 Lock image</button>
+            <button type="button" class="btn" id="mirrorBtn" aria-pressed="false">⇄ Mirror</button>
+            <button type="button" class="btn" id="gridBtn" aria-pressed="false">▦ Grid</button>
+            <button type="button" class="btn" id="outlineBtn" aria-pressed="false">◑ High contrast</button>
+            <button type="button" class="btn" id="resetBtn">↺ Reset image</button>
+          </div>
+          <p class="hint" id="gestureHint">Drag the photo with one finger. Pinch with two fingers to resize. Lock it when lined up with the paper.</p>
+        </section>
+        <section class="panel tips">
+          <h2>How to draw</h2>
+          <p><strong>1.</strong> Upload a photo from your gallery.</p>
+          <p><strong>2.</strong> Allow camera access and point the rear camera at paper on a flat surface.</p>
+          <p><strong>3.</strong> Make the picture faint, drag and resize it to fit, then lock it so it will not move accidentally.</p>
+          <p><strong>4.</strong> Keep your phone steady on a stand above the paper and follow the lines while watching the screen.</p>
+          <p><strong>Note:</strong> The image appears on your phone screen, not projected onto the paper. The phone should remain still for accurate tracing.</p>
+          <div class="privacy">🔒 Photos are processed in your browser and are not uploaded to a server.</div>
+        </section>
+      </div>
+    </div>
+    <footer>Created and developed by Michael Skinner</footer>
+  </main>
+  <button class="focus-exit" type="button" id="focusExitBtn">✕ Done</button>
+
+  <script>
+  (() => {
+    "use strict";
+    const el = id => document.getElementById(id);
+    const stage = el("viewfinder");
+    const video = el("camera");
+    const picture = el("overlayImage");
+    const empty = el("emptyStage");
+    const notice = el("cameraStatus");
+    const error = el("errorMessage");
+    const fileInput = el("fileInput");
+    const opacity = el("opacity");
+    const scale = el("scale");
+    const rotation = el("rotation");
+    const cameraBtn = el("cameraBtn");
+    const stopBtn = el("stopBtn");
+    const switchBtn = el("switchBtn");
+    let stream = null;
+    let cameraFacing = "environment";
+    let objectURL = null;
+    let isLocked = false;
+    let mirrored = false;
+    let highContrast = false;
+    let zoom = 1;
+    let angle = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+    let imgRatio = 1;
+    let cameraActive = false;
+    const touches = new Map();
+    let gesture = null;
+    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+    function setStatus(s){notice.textContent=s;}
+    function setError(s){error.textContent=s || "";}
+    function updateOverlay(){
+      picture.style.opacity = String(Number(opacity.value)/100);
+      picture.style.transform = "translate(-50%, -50%) translate(" + offsetX + "px," + offsetY + "px) rotate(" + angle + "deg) scale(" + (mirrored ? -zoom : zoom) + "," + zoom + ")";
+      picture.style.filter = highContrast ? "grayscale(1) contrast(2.3) brightness(1.1)" : "none";
+      el("opacityValue").textContent=opacity.value+"%";
+      el("scaleValue").textContent=Math.round(zoom*100)+"%";
+      el("rotationValue").textContent=angle+"°";
+      scale.value=String(Math.round(zoom*100));
+      rotation.value=String(angle);
+    }
+    function fitImage(){
+      if(!picture.naturalWidth || !picture.naturalHeight) return;
+      const rect = stage.getBoundingClientRect();
+      picture.style.width = Math.min(rect.width*.87,rect.height*.83*imgRatio)+"px";
+      picture.style.height = "auto";
+    }
+    function updateEmpty(){
+      empty.hidden = Boolean(picture.getAttribute("src")) || cameraActive;
+      empty.style.display=empty.hidden?"none":"flex";
+      el("modeLabel").textContent = picture.getAttribute("src") ? (cameraActive ? "Ready to trace" : "Photo loaded · start camera") : (cameraActive?"Camera running":"Upload a photo to begin");
+    }
+    function resetImage(){
+      zoom=1;angle=0;offsetX=0;offsetY=0;mirrored=false;highContrast=false;
+      opacity.value="55";
+      el("mirrorBtn").setAttribute("aria-pressed","false");
+      el("outlineBtn").setAttribute("aria-pressed","false");
+      updateOverlay();
+    }
+    el("uploadBtn").addEventListener("click",()=>fileInput.click());
+    fileInput.addEventListener("change",()=>{
+      const file=fileInput.files && fileInput.files[0];
+      if(!file) return;
+      if(!file.type.startsWith("image/")){setError("Please choose a photo or image file.");return;}
+      setError("");
+      const newURL=URL.createObjectURL(file);
+      const probe=new Image();
+      probe.onload=()=>{
+        if(objectURL) URL.revokeObjectURL(objectURL);
+        objectURL=newURL;
+        imgRatio=probe.naturalWidth/probe.naturalHeight;
+        picture.src=newURL;
+        picture.hidden=false;
+        resetImage();
+        fitImage();
+        updateEmpty();
+        setStatus(cameraActive ? "Drag, resize and position the tracing image" : "Photo loaded. Tap Start Camera.");
+      };
+      probe.onerror=()=>{
+        URL.revokeObjectURL(newURL);
+        setError("This photo could not be opened. Try a JPEG or PNG image.");
+      };
+      probe.src=newURL;
+      fileInput.value="";
+    });
+
+    function stopCamera(){
+      if(stream){stream.getTracks().forEach(track=>track.stop());stream=null;}
+      video.pause();
+      video.srcObject=null;
+      cameraActive=false;
+      cameraBtn.textContent="📷 Start Camera";
+      switchBtn.disabled=true;
+      stopBtn.disabled=true;
+      updateEmpty();
+      setStatus(picture.getAttribute("src")?"Camera stopped. Your photo is still ready.":"Camera is off");
+    }
+    async function startCamera(facing){
+      if(!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        setError("Camera access needs HTTPS and a compatible browser. Open the live site in Safari or Chrome, not as a downloaded file.");
+        return false;
+      }
+      stopCamera();
+      cameraBtn.disabled=true;
+      setError("");
+      setStatus("Requesting camera permission…");
+      try{
+        stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:720}}});
+        video.srcObject=stream;
+        try{await video.play();}catch(e){/* The video element is muted and may start automatically. */}
+        cameraActive=true;
+        cameraFacing=facing;
+        cameraBtn.textContent="✓ Camera On";
+        switchBtn.disabled=false;
+        stopBtn.disabled=false;
+        updateEmpty();
+        setStatus(picture.getAttribute("src")?"Line up your photo over the paper":"Camera is ready. Choose a photo.");
+        return true;
+      }catch(e){
+        stopCamera();
+        const denied=e && (e.name==="NotAllowedError" || e.name==="PermissionDeniedError");
+        setError(denied?"Camera permission was denied. Allow camera access for this website in your browser settings.":"Unable to start the camera. Check camera permissions and close any other app using it.");
+        return false;
+      }finally{cameraBtn.disabled=false;}
+    }
+    cameraBtn.addEventListener("click",()=>{if(!cameraActive)startCamera(cameraFacing);});
+    stopBtn.addEventListener("click",stopCamera);
+    switchBtn.addEventListener("click",async()=>{
+      const old=cameraFacing;
+      const next=old==="environment"?"user":"environment";
+      const ok=await startCamera(next);
+      if(!ok) setStatus("Camera switch failed. Tap Start Camera to try again.");
+    });
+    opacity.addEventListener("input",updateOverlay);
+    scale.addEventListener("input",()=>{zoom=Number(scale.value)/100;updateOverlay();});
+    rotation.addEventListener("input",()=>{angle=Number(rotation.value);updateOverlay();});
+    el("resetBtn").addEventListener("click",resetImage);
+    el("lockBtn").addEventListener("click",()=>{
+      isLocked=!isLocked;
+      el("lockBtn").setAttribute("aria-pressed",String(isLocked));
+      el("lockBtn").textContent=isLocked?"🔒 Unlock image":"🔓 Lock image";
+      el("gestureHint").textContent=isLocked?"Image locked. Tap Unlock image to move or pinch it again.":"Drag with one finger; pinch with two fingers to resize. Lock when lined up.";
+      stage.style.cursor=isLocked?"default":"grab";
+    });
+    el("mirrorBtn").addEventListener("click",()=>{
+      mirrored=!mirrored;
+      el("mirrorBtn").setAttribute("aria-pressed",String(mirrored));
+      updateOverlay();
+    });
+    el("outlineBtn").addEventListener("click",()=>{
+      highContrast=!highContrast;
+      el("outlineBtn").setAttribute("aria-pressed",String(highContrast));
+      updateOverlay();
+    });
+    el("gridBtn").addEventListener("click",()=>{
+      const on=el("gridBtn").getAttribute("aria-pressed")!=="true";
+      el("gridBtn").setAttribute("aria-pressed",String(on));
+      el("gridLines").classList.toggle("on",on);
+    });
+
+    function beginGesture(){
+      const pts=[...touches.values()];
+      if(pts.length===1){
+        gesture={count:1,startX:pts[0].x,startY:pts[0].y,x:offsetX,y:offsetY};
+      }else if(pts.length>=2){
+        const a=pts[0],b=pts[1];
+        gesture={count:2,midX:(a.x+b.x)/2,midY:(a.y+b.y)/2,
+          distance:Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),x:offsetX,y:offsetY,zoom};
+      }else{gesture=null;}
+    }
+    stage.addEventListener("pointerdown",e=>{
+      if(isLocked || !picture.getAttribute("src") || (e.pointerType==="mouse"&&e.button!==0))return;
+      e.preventDefault();
+      touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      try{stage.setPointerCapture(e.pointerId);}catch(_){}
+      stage.classList.add("dragging");
+      beginGesture();
+    });
+    stage.addEventListener("pointermove",e=>{
+      if(!touches.has(e.pointerId))return;
+      e.preventDefault();
+      touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      const pts=[...touches.values()];
+      if(!gesture)return;
+      if(pts.length===1&&gesture.count===1){
+        offsetX=gesture.x+pts[0].x-gesture.startX;
+        offsetY=gesture.y+pts[0].y-gesture.startY;
+      }else if(pts.length>=2&&gesture.count===2){
+        const a=pts[0],b=pts[1];
+        const midX=(a.x+b.x)/2,midY=(a.y+b.y)/2;
+        const dist=Math.hypot(a.x-b.x,a.y-b.y);
+        zoom=clamp(gesture.zoom*dist/gesture.distance,.25,4);
+        offsetX=gesture.x+midX-gesture.midX;
+        offsetY=gesture.y+midY-gesture.midY;
+      }
+      updateOverlay();
+    });
+    function release(e){
+      if(!touches.has(e.pointerId))return;
+      touches.delete(e.pointerId);
+      beginGesture();
+      if(!touches.size)stage.classList.remove("dragging");
+    }
+    stage.addEventListener("pointerup",release);
+    stage.addEventListener("pointercancel",release);
+    stage.addEventListener("lostpointercapture",release);
+
+    function focusMode(enable){
+      document.body.classList.toggle("focus-mode",enable);
+      fitImage();
+      setTimeout(fitImage,100);
+    }
+    el("focusBtn").addEventListener("click",()=>focusMode(true));
+    el("focusExitBtn").addEventListener("click",()=>focusMode(false));
+    window.addEventListener("keydown",e=>{if(e.key==="Escape")focusMode(false);});
+    window.addEventListener("resize",fitImage);
+    if("ResizeObserver" in window)new ResizeObserver(fitImage).observe(stage);
+    window.addEventListener("pagehide",()=>{
+      if(stream)stream.getTracks().forEach(track=>track.stop());
+      if(objectURL)URL.revokeObjectURL(objectURL);
+    });
+    updateOverlay();
+    updateEmpty();
+  })();
+  </script>
+</body>
+</html>
