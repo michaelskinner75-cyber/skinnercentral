@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#120b16">
   <meta name="description" content="Trace your own photos using a transparent image over a live camera view on your phone.">
   <title>AR Drawing | Skinners Bar Games</title>
@@ -198,6 +198,10 @@
     function resetImage(){
       zoom=1;angle=0;offsetX=0;offsetY=0;mirrored=false;highContrast=false;
       opacity.value="55";
+      isLocked=false;
+      el("lockBtn").setAttribute("aria-pressed","false");
+      el("lockBtn").textContent="🔓 Lock image";
+      el("gestureHint").textContent="Drag with one finger; pinch with two fingers to resize. Lock when lined up.";
       el("mirrorBtn").setAttribute("aria-pressed","false");
       el("outlineBtn").setAttribute("aria-pressed","false");
       updateOverlay();
@@ -214,6 +218,7 @@
         if(objectURL) URL.revokeObjectURL(objectURL);
         objectURL=newURL;
         imgRatio=probe.naturalWidth/probe.naturalHeight;
+        picture.onload=fitImage;
         picture.src=newURL;
         picture.hidden=false;
         resetImage();
